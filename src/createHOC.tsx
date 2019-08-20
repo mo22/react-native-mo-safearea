@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as hoistStatics from 'hoist-non-react-statics';
+import hoistStatics from 'hoist-non-react-statics';
 
 export function createHOC<Injected>(callback: (component: any, props: any, ref: any) => any) {
   const res = function HOC<

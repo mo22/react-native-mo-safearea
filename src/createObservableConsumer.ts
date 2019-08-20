@@ -11,14 +11,14 @@ export function createObservableConsumer<T>(subject: Subscribable<T>|BehaviorSub
     public state = {
       value: ('getValue' in subject) ? subject.getValue() : undefined,
     };
-    public subscription: Unsubscribable;
+    public subscription?: Unsubscribable;
     public componentDidMount() {
       this.subscription = subject.subscribe((value) => {
         this.setState({ value: value });
       });
     }
     public componentWillUnmount() {
-      this.subscription.unsubscribe();
+      this.subscription!.unsubscribe();
     }
     public render() {
       return this.props.children(this.state.value);
