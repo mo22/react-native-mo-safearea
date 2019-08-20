@@ -27,7 +27,12 @@ export interface SafeAreaViewStyle extends ViewStyle {
   // allow number of pixels to reach into safe area?
 
   // where to adjust to safe area insets
-  safeArea?: ('top'|'left'|'right'|'bottom'|'horizontal'|'vertical')|('top'|'left'|'right'|'bottom'|'horizontal'|'vertical')[];
+  safeArea?: {
+    top?: boolean;
+    left?: boolean;
+    right?: boolean;
+    bottom?: boolean;
+  };
 }
 
 export interface SafeAreaViewProps extends ViewProps {
@@ -51,15 +56,16 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
   };
 
   private getStyleSafeArea(style: SafeAreaViewStyle): { top: boolean; left: boolean; right: boolean; bottom: boolean; } {
-    const res = { top: true, left: true, right: true, bottom: true };
-    if (typeof style === 'object' && style.safeArea) {
-      const value = Array.isArray(style.safeArea) ? style.safeArea : [style.safeArea];
-      res.top = value.indexOf('top') >= 0;
-      res.left = value.indexOf('left') >= 0;
-      res.right = value.indexOf('right') >= 0;
-      res.bottom = value.indexOf('bottom') >= 0;
+    if (typeof style === 'object' && typeof style.safeArea === 'object') {
+      return {
+        top: style.safeArea.top || false,
+        left: style.safeArea.left || false,
+        right: style.safeArea.right || false,
+        bottom: style.safeArea.bottom || false,
+      };
+    } else {
+      return { top: true, left: true, right: true, bottom: true };
     }
-    return res;
   }
 
   private getStyleMinPadding(style: SafeAreaViewStyle): { top: number; left: number; right: number; bottom: number; } {

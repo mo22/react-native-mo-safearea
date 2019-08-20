@@ -15,7 +15,12 @@ export interface SafeAreaViewStyle extends ViewStyle {
     paddingRight?: number;
     paddingTop?: number;
     paddingVertical?: number;
-    safeArea?: ('top' | 'left' | 'right' | 'bottom' | 'horizontal' | 'vertical') | ('top' | 'left' | 'right' | 'bottom' | 'horizontal' | 'vertical')[];
+    safeArea?: {
+        top?: boolean;
+        left?: boolean;
+        right?: boolean;
+        bottom?: boolean;
+    };
 }
 export interface SafeAreaViewProps extends ViewProps {
     style?: StyleProp<SafeAreaViewStyle>;
