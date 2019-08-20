@@ -53,87 +53,89 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
             }}
             type={this.state.type}
           >
+            <View style={{ backgroundColor: 'white' }}>
 
-            <ListItem
-              title="back"
-              onPress={() => {
-                this.props.navigation.dispatch(NavigationActions.back());
-              }}
-            />
-
-            <View style={{ height: 20 }} />
-
-            {this.props.safeArea && keysOf(this.props.safeArea).map((i) => (
               <ListItem
-                key={i}
-                title={i}
-                rightTitle={this.props.safeArea[i].toString()}
+                title="back"
+                onPress={() => {
+                  this.props.navigation.dispatch(NavigationActions.back());
+                }}
               />
-            ))}
 
-            <View style={{ height: 20 }} />
+              <View style={{ height: 20 }} />
 
-            <ListItem
-              title="type"
-              buttonGroup={{
-                selectedIndex: types.indexOf(this.state.type),
-                buttons: types as string[],
-                onPress: (selectedIndex) => {
-                  this.setState({ type: types[selectedIndex] });
-                },
-              }}
-            />
+              {this.props.safeArea && keysOf(this.props.safeArea).map((i) => (
+                <ListItem
+                  key={i}
+                  title={i}
+                  rightTitle={this.props.safeArea[i].toString()}
+                />
+              ))}
 
-            <View style={{ height: 20 }} />
+              <View style={{ height: 20 }} />
 
-            {keysOf(this.state.safeArea).map((i) => (
               <ListItem
-                key={i}
-                title={i}
-                switch={{
-                  value: this.state.safeArea[i],
-                  onValueChange: (value) => {
-                    this.state.safeArea[i] = value;
-                    this.forceUpdate();
+                title="type"
+                buttonGroup={{
+                  selectedIndex: types.indexOf(this.state.type),
+                  buttons: types as string[],
+                  onPress: (selectedIndex) => {
+                    this.setState({ type: types[selectedIndex] });
                   },
                 }}
               />
-            ))}
 
-            <View style={{ height: 20 }} />
+              <View style={{ height: 20 }} />
 
-            {keysOf(this.state.padding).map((i) => (
-              <ListItem
-                key={i}
-                title={i}
-                input={{
-                  value: this.state.padding[i].toString(),
-                  onChangeText: (value) => {
-                    this.state.padding[i] = parseFloat(value);
-                    this.forceUpdate();
-                  },
-                  keyboardType: 'numeric',
-                }}
-              />
-            ))}
+              {keysOf(this.state.safeArea).map((i) => (
+                <ListItem
+                  key={i}
+                  title={i}
+                  switch={{
+                    value: this.state.safeArea[i],
+                    onValueChange: (value) => {
+                      this.state.safeArea[i] = value;
+                      this.forceUpdate();
+                    },
+                  }}
+                />
+              ))}
 
-            <View style={{ height: 20 }} />
+              <View style={{ height: 20 }} />
 
-            {keysOf(this.state.minPadding).map((i) => (
-              <ListItem
-                key={i}
-                title={i}
-                input={{
-                  value: this.state.minPadding[i].toString(),
-                  onChangeText: (value) => {
-                    this.state.minPadding[i] = parseFloat(value);
-                    this.forceUpdate();
-                  },
-                  keyboardType: 'numeric',
-                }}
-              />
-            ))}
+              {keysOf(this.state.padding).map((i) => (
+                <ListItem
+                  key={i}
+                  title={i}
+                  input={{
+                    value: this.state.padding[i].toString(),
+                    onChangeText: (value) => {
+                      this.state.padding[i] = parseFloat(value);
+                      this.forceUpdate();
+                    },
+                    keyboardType: 'numeric',
+                  }}
+                />
+              ))}
 
+              <View style={{ height: 20 }} />
+
+              {keysOf(this.state.minPadding).map((i) => (
+                <ListItem
+                  key={i}
+                  title={i}
+                  input={{
+                    value: this.state.minPadding[i].toString(),
+                    onChangeText: (value) => {
+                      this.state.minPadding[i] = parseFloat(value);
+                      this.forceUpdate();
+                    },
+                    keyboardType: 'numeric',
+                  }}
+                />
+              ))}
+
+            </View>
           </SafeAreaView>
         </ScrollView>
       </KeyboardAvoidingView>

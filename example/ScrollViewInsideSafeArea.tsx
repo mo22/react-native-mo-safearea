@@ -51,7 +51,7 @@ export default class ScrollViewInsideSafeArea extends React.Component<Navigation
         type={this.state.type}
       >
         <KeyboardAvoidingView style={{ flex: 1 }}>
-          <ScrollView style={{ backgroundColor: 'red', flex: 1 }}>
+          <ScrollView style={{ backgroundColor: 'white', flex: 1 }}>
 
             <View style={{ height: 20 }} />
 

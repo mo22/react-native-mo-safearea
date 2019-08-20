@@ -18,11 +18,14 @@ class App extends React.PureComponent<{}> {
           try {
             await AsyncStorage.setItem('navState', JSON.stringify(navState));
           } catch (e) {
-            console.error(e);
           }
         }}
         loadNavigationState={async () => {
-          return JSON.parse(await AsyncStorage.getItem('navState') || 'null');
+          try {
+            return JSON.parse(await AsyncStorage.getItem('navState') || 'null');
+          } catch (e) {
+            return null;
+          }
         }}
       />
     );
