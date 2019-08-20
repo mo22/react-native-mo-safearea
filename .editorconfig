@@ -7,3 +7,10 @@ trim_trailing_whitespace = true
 charset = utf-8
 indent_style = space
 indent_size = 2
+
+[*.java]
+indent_size = 4
+
+[*.{m,h,mm,c,cc,cpp}]
+indent_size = 4
+
