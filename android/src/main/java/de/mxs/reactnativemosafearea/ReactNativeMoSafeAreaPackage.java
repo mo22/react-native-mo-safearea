@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public final class ReactNativeMoLayoutPackage implements ReactPackage {
+public final class ReactNativeMoSafeAreaPackage implements ReactPackage {
 
     @Override
     public @Nonnull List<ViewManager> createViewManagers(@Nonnull ReactApplicationContext reactContext) {
@@ -22,10 +22,7 @@ public final class ReactNativeMoLayoutPackage implements ReactPackage {
     @Override
     public @Nonnull List<NativeModule> createNativeModules(@Nonnull ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
-        modules.add(new ReactNativeMoOrientation(reactContext));
-        modules.add(new ReactNativeMoVibrate(reactContext));
         modules.add(new ReactNativeMoSafeArea(reactContext));
-        modules.add(new ReactNativeMoScreen(reactContext));
         return modules;
     }
 
