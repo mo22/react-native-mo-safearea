@@ -1,2 +1,6 @@
 /example
+/.editorconfig
+/tsconfig.json
+/tslint.json
+/copy.sh
 
