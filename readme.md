@@ -1,6 +1,6 @@
 ## TODO
 
-- [ ] test
+- [ ] test / example folder? (npmignore)
 - [ ] docs
 - [ ] publish
 
