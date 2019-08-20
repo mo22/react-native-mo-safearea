@@ -1,4 +1,4 @@
-package de.mxs.reactnativemolayout;
+package de.mxs.reactnativemosafearea;
 
 import android.content.Context;
 import android.os.Build;

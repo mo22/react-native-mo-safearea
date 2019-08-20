@@ -8,8 +8,8 @@
     "type": "git",
     "url": "git+https://github.com/mo22/react-native-mo-safearea.git"
   },
-  "author": "Moritz Moeller",
-  "license": "ISC",
+  "author": "Moritz Moeller <mm@mxs.de>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mo22/react-native-mo-safearea/issues"
   },

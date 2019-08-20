@@ -1,4 +1,4 @@
-package de.mxs.reactnativemolayout;
+package de.mxs.reactnativemosafearea;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.LayoutShadowNode;

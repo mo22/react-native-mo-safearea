@@ -1,4 +1,4 @@
-package de.mxs.reactnativemolayout;
+package de.mxs.reactnativemosafearea;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
