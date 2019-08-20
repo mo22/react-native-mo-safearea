@@ -1,7 +1,6 @@
 ## TODO
 
 - [ ] remove dependencies
-- [ ] test / example folder? (npmignore)
 - [ ] docs
 - [ ] publish
 

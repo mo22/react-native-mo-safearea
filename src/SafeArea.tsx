@@ -28,9 +28,13 @@ export class SafeArea {
   private static safeAreaSubscription?: EmitterSubscription;
 
   private static safeAreaSubscribe(active: boolean) {
+    console.log('safeAreaSubscribe', active);
     if (this.safeAreaSubscription) {
       this.safeAreaSubscription.remove();
       this.safeAreaSubscription = undefined;
+      if (android.Module && !active) {
+        android.Module.stopSafeAreaEvent();
+      }
     }
 
     if (active) {
@@ -40,7 +44,8 @@ export class SafeArea {
           console.log('ReactNativeMoSafeArea.next', rs.safeArea);
           this.safeArea.next(rs.safeArea);
         });
-      } else if (android.Events) {
+      } else if (android.Events && android.Module) {
+        android.Module.startSafeAreaEvent();
         this.safeAreaSubscription = android.Events.addListener('ReactNativeMoSafeArea', (rs) => {
           if (JSON.stringify(rs.safeArea) === JSON.stringify(this.safeArea.getValue())) return;
           console.log('ReactNativeMoSafeArea.next', rs.safeArea);

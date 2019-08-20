@@ -2,6 +2,8 @@ import { NativeModules, NativeEventEmitter, EmitterSubscription, Insets, Platfor
 
 export interface Module {
   getSafeArea(): Promise<undefined|Required<Insets>>;
+  startSafeAreaEvent(): void;
+  stopSafeAreaEvent(): void;
 }
 
 export interface SafeAreaEvent {

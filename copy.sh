@@ -12,7 +12,6 @@ if [ "$1" == "from" ]; then
   cp -r $DIR/node_modules/react-native-mo-safearea/src/* ./src/
   cp $DIR/node_modules/react-native-mo-safearea/android/build.gradle ./android/
   cp -a $DIR/node_modules/react-native-mo-safearea/android/src ./android/
-  cp $DIR/node_modules/react-native-mo-safearea/readme.txt .
 fi
 
 if [ "$1" == "to" ]; then

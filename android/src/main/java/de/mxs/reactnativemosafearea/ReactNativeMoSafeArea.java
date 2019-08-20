@@ -2,6 +2,7 @@ package de.mxs.reactnativemosafearea;
 
 import android.app.Activity;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowInsets;
 
@@ -34,15 +35,20 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
 
     @Override
     public void onCatalystInstanceDestroy() {
-        stopSafeAreaEvent();
+        enableSafeAreaEvent(false);
         super.onCatalystInstanceDestroy();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void startWatchingWindowInsets(final Activity activity) {
-        stopSafeAreaEvent();
+        Log.i("XXX", "startWatchingWindowInsets");
+        if (windowInsetView != null) {
+          windowInsetView.setOnApplyWindowInsetsListener(null);
+          windowInsetView = null;
+        }
         windowInsetView = activity.findViewById(android.R.id.content);
         windowInsetView.setOnApplyWindowInsetsListener((v, insets) -> {
+            Log.i("XXX", "onApplyWindowInsets");
             WritableMap args = Arguments.createMap();
             final WindowInsets insets2 = activity.getWindow().getDecorView().getRootWindowInsets();
             final float density = activity.getResources().getDisplayMetrics().density;
@@ -59,46 +65,46 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
         });
     }
 
-    @SuppressWarnings({"unused"})
-    @ReactMethod
-    public void startSafeAreaEvent() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            final Activity activity = getCurrentActivity();
-            if (activity == null) {
-                getReactApplicationContext().addLifecycleEventListener(new LifecycleEventListener() {
-                    @Override
-                    public void onHostResume() {
-                        getReactApplicationContext().removeLifecycleEventListener(this);
-                        final Activity activity = getCurrentActivity();
-                        if (activity == null) return;
-                        startWatchingWindowInsets(activity);
-                    }
-                    @Override
-                    public void onHostPause() {
-                    }
-                    @Override
-                    public void onHostDestroy() {
-                    }
-                });
-            } else {
-                startWatchingWindowInsets(getCurrentActivity());
-            }
-        }
-    }
-
     @SuppressWarnings({"unused", "WeakerAccess"})
     @ReactMethod
-    public void stopSafeAreaEvent() {
-        if (windowInsetView != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                windowInsetView.setOnApplyWindowInsetsListener(null);
+    public void enableSafeAreaEvent(boolean enable) {
+        Log.i("XXX", "enableSafeAreaEvent " + enable);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!enable) {
+                if (windowInsetView != null) {
+                    windowInsetView.setOnApplyWindowInsetsListener(null);
+                    windowInsetView = null;
+                }
             }
-            windowInsetView = null;
+            if (enable) {
+                final Activity activity = getCurrentActivity();
+                if (activity == null) {
+                    getReactApplicationContext().addLifecycleEventListener(new LifecycleEventListener() {
+                        @Override
+                        public void onHostResume() {
+                            getReactApplicationContext().removeLifecycleEventListener(this);
+                            final Activity activity = getCurrentActivity();
+                            if (activity == null) return;
+                            startWatchingWindowInsets(activity);
+                        }
+
+                        @Override
+                        public void onHostPause() {
+                        }
+
+                        @Override
+                        public void onHostDestroy() {
+                        }
+                    });
+                } else {
+                    startWatchingWindowInsets(getCurrentActivity());
+                }
+            }
         }
     }
 
     private void getSafeAreaFromActivity(Activity activity, Promise promise) {
-        if (activity == null) throw new RuntimeException("activity null");
+        if (activity == null) throw new RuntimeException("activity == null");
         View view = activity.getWindow().getDecorView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             final WindowInsets insets = view.getRootWindowInsets();

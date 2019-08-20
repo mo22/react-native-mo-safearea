@@ -55,7 +55,6 @@ RCT_EXPORT_METHOD(getSafeArea:(RCTPromiseResolveBlock)resolve reject:(RCTPromise
     if ([keyPath isEqualToString:@"safeAreaInsets"]) {
         if (@available(iOS 11.0, *)) {
             UIEdgeInsets insets = UIApplication.sharedApplication.keyWindow.safeAreaInsets;
-//            NSLog(@"ReactNativeMoSafeArea new insets");
             [self sendEventWithName:@"ReactNativeMoSafeArea" body:@{
                 @"safeArea": @{
                     @"top": @(insets.top),
@@ -68,18 +67,23 @@ RCT_EXPORT_METHOD(getSafeArea:(RCTPromiseResolveBlock)resolve reject:(RCTPromise
     }
 }
 
-- (void)startObserving {
-//    NSLog(@"ReactNativeMoSafeArea.startObserving");
-    self->_referenceView = RCTSharedApplication().keyWindow.rootViewController.view;
-    [self->_referenceView addObserver:self forKeyPath:@"safeAreaInsets" options:NSKeyValueObservingOptionNew context:nil];
+RCT_EXPORT_METHOD(enableSafeAreaEvent:(BOOL)enable) {
+    if (enable) {
+        if (_referenceView) {
+            [self->_referenceView removeObserver:self forKeyPath:@"safeAreaInsets"];
+        }
+        self->_referenceView = RCTSharedApplication().keyWindow.rootViewController.view;
+        [self->_referenceView addObserver:self forKeyPath:@"safeAreaInsets" options:NSKeyValueObservingOptionNew context:nil];
+    } else {
+        if (_referenceView) {
+            [self->_referenceView removeObserver:self forKeyPath:@"safeAreaInsets"];
+            self->_referenceView = nil;
+        }
+    }
 }
 
 - (void)stopObserving {
-//    NSLog(@"ReactNativeMoSafeArea.stopObserving");
-    if (_referenceView) {
-        [self->_referenceView removeObserver:self forKeyPath:@"safeAreaInsets"];
-        self->_referenceView = nil;
-    }
+    [self enableSafeAreaEvent:NO];
 }
 
 @end
