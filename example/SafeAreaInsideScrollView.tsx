@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, KeyboardAvoidingView } from 'react-native';
-import { NavigationInjectedProps, NavigationScreenOptions, ScrollView } from 'react-navigation';
+import { NavigationInjectedProps, NavigationScreenOptions, ScrollView, NavigationActions } from 'react-navigation';
 import { SafeAreaView, withSafeArea, SafeAreaInjectedProps } from 'react-native-mo-safearea';
 import { ListItem } from 'react-native-elements';
 
@@ -9,9 +9,10 @@ function keysOf<T extends {}>(obj: T): (keyof T)[] {
 }
 
 @withSafeArea
-export default class Test1 extends React.Component<NavigationInjectedProps & SafeAreaInjectedProps> {
+export default class SafeAreaInsideScrollView extends React.Component<NavigationInjectedProps & SafeAreaInjectedProps> {
   public static navigationOptions: NavigationScreenOptions = {
-    title: 'Test1',
+    title: 'SafeAreaInsideScrollView',
+    header: null,
   };
 
   public state = {
@@ -40,18 +41,25 @@ export default class Test1 extends React.Component<NavigationInjectedProps & Saf
     const types: SafeAreaView['props']['type'][] = ['react', 'native', 'disabled', 'simple', 'layout'];
 
     return (
-      <SafeAreaView
-        style={{
-          backgroundColor: 'purple',
-          flex: 1,
-          ...this.state.safeArea,
-          ...this.state.minPadding,
-          ...this.state.padding,
-        }}
-        type={this.state.type}
-      >
-        <KeyboardAvoidingView style={{ flex: 1 }}>
-          <ScrollView style={{ backgroundColor: 'red', flex: 1 }}>
+      <KeyboardAvoidingView style={{ flex: 1 }}>
+        <ScrollView style={{ backgroundColor: 'red', flex: 1 }}>
+          <SafeAreaView
+            style={{
+              backgroundColor: 'purple',
+              flex: 1,
+              ...this.state.safeArea,
+              ...this.state.minPadding,
+              ...this.state.padding,
+            }}
+            type={this.state.type}
+          >
+
+            <ListItem
+              title="back"
+              onPress={() => {
+                this.props.navigation.dispatch(NavigationActions.back());
+              }}
+            />
 
             <View style={{ height: 20 }} />
 
@@ -126,9 +134,9 @@ export default class Test1 extends React.Component<NavigationInjectedProps & Saf
               />
             ))}
 
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+          </SafeAreaView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }

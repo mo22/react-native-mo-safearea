@@ -4,8 +4,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 const AppNavigator = createStackNavigator({
   Menu: { screen: require('./Menu').default },
-  Test1: { screen: require('./Test1').default },
-  Test2: { screen: require('./Test2').default },
+  ScrollViewInsideSafeArea: { screen: require('./ScrollViewInsideSafeArea').default },
+  SafeAreaInsideScrollView: { screen: require('./SafeAreaInsideScrollView').default },
 });
 
 const AppContainer = createAppContainer(AppNavigator);
