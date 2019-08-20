@@ -41,14 +41,12 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void startWatchingWindowInsets(final Activity activity) {
-        Log.i("XXX", "startWatchingWindowInsets");
         if (windowInsetView != null) {
           windowInsetView.setOnApplyWindowInsetsListener(null);
           windowInsetView = null;
         }
         windowInsetView = activity.findViewById(android.R.id.content);
         windowInsetView.setOnApplyWindowInsetsListener((v, insets) -> {
-            Log.i("XXX", "onApplyWindowInsets");
             WritableMap args = Arguments.createMap();
             final WindowInsets insets2 = activity.getWindow().getDecorView().getRootWindowInsets();
             final float density = activity.getResources().getDisplayMetrics().density;
@@ -68,7 +66,6 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
     @SuppressWarnings({"unused", "WeakerAccess"})
     @ReactMethod
     public void enableSafeAreaEvent(boolean enable) {
-        Log.i("XXX", "enableSafeAreaEvent " + enable);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!enable) {
                 if (windowInsetView != null) {
