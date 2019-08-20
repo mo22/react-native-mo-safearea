@@ -15,6 +15,7 @@ export default class Test1 extends React.Component<NavigationInjectedProps & Saf
   };
 
   public state = {
+    type: 'native' as SafeAreaView['props']['type'],
     safeArea: {
       safeAreaTop: true,
       safeAreaLeft: true,
@@ -36,8 +37,8 @@ export default class Test1 extends React.Component<NavigationInjectedProps & Saf
   };
 
   public render() {
-    console.log('prop', this.props);
-    // switches / inputs for safeArea/padding?
+    const types: SafeAreaView['props']['type'][] = ['react', 'native', 'disabled', 'simple', 'layout'];
+
     return (
       <SafeAreaView
         style={{
@@ -47,6 +48,7 @@ export default class Test1 extends React.Component<NavigationInjectedProps & Saf
           ...this.state.minPadding,
           ...this.state.padding,
         }}
+        type={this.state.type}
       >
         <KeyboardAvoidingView style={{ flex: 1 }}>
           <ScrollView style={{ backgroundColor: 'red', flex: 1 }}>
@@ -60,6 +62,19 @@ export default class Test1 extends React.Component<NavigationInjectedProps & Saf
                 rightTitle={this.props.safeArea[i].toString()}
               />
             ))}
+
+            <View style={{ height: 20 }} />
+
+            <ListItem
+              title="type"
+              buttonGroup={{
+                selectedIndex: types.indexOf(this.state.type),
+                buttons: types as string[],
+                onPress: (selectedIndex) => {
+                  this.setState({ type: types[selectedIndex] });
+                },
+              }}
+            />
 
             <View style={{ height: 20 }} />
 
