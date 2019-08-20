@@ -51,37 +51,42 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
   };
 
   private getStyleSafeArea(style: SafeAreaViewStyle): { top: boolean; left: boolean; right: boolean; bottom: boolean; } {
-    if (style.safeArea === undefined) return { top: true, left: true, right: true, bottom: true };
-    const value = Array.isArray(style.safeArea) ? style.safeArea : [style.safeArea];
-    return {
-      top: value.indexOf('top') >= 0,
-      left: value.indexOf('left') >= 0,
-      right: value.indexOf('right') >= 0,
-      bottom: value.indexOf('bottom') >= 0,
-    };
+    const res = { top: true, left: true, right: true, bottom: true };
+    if (typeof style === 'object' && style.safeArea) {
+      const value = Array.isArray(style.safeArea) ? style.safeArea : [style.safeArea];
+      res.top = value.indexOf('top') >= 0;
+      res.left = value.indexOf('left') >= 0;
+      res.right = value.indexOf('right') >= 0;
+      res.bottom = value.indexOf('bottom') >= 0;
+    }
+    return res;
   }
 
   private getStyleMinPadding(style: SafeAreaViewStyle): { top: number; left: number; right: number; bottom: number; } {
     const res: { top: number; left: number; right: number; bottom: number; } = { top: 0, left: 0, right: 0, bottom: 0 };
-    if (style.minPadding) res.top = res.bottom = res.left = res.right = style.minPadding;
-    if (style.minPaddingHorizontal) res.left = res.right = style.minPaddingHorizontal;
-    if (style.minPaddingVertical) res.top = res.bottom = style.minPaddingVertical;
-    if (style.minPaddingTop) res.top = style.minPaddingTop;
-    if (style.minPaddingLeft) res.left = style.minPaddingLeft;
-    if (style.minPaddingRight) res.right = style.minPaddingRight;
-    if (style.minPaddingBottom) res.bottom = style.minPaddingBottom;
+    if (typeof style === 'object') {
+      if (style.minPadding) res.top = res.bottom = res.left = res.right = style.minPadding;
+      if (style.minPaddingHorizontal) res.left = res.right = style.minPaddingHorizontal;
+      if (style.minPaddingVertical) res.top = res.bottom = style.minPaddingVertical;
+      if (style.minPaddingTop) res.top = style.minPaddingTop;
+      if (style.minPaddingLeft) res.left = style.minPaddingLeft;
+      if (style.minPaddingRight) res.right = style.minPaddingRight;
+      if (style.minPaddingBottom) res.bottom = style.minPaddingBottom;
+    }
     return res;
   }
 
   private getStylePadding(style: SafeAreaViewStyle): { top: number; left: number; right: number; bottom: number; } {
     const res: { top: number; left: number; right: number; bottom: number; } = { top: 0, left: 0, right: 0, bottom: 0 };
-    if (style.padding) res.top = res.bottom = res.left = res.right = style.padding;
-    if (style.paddingHorizontal) res.left = res.right = style.paddingHorizontal;
-    if (style.paddingVertical) res.top = res.bottom = style.paddingVertical;
-    if (style.paddingTop) res.top = style.paddingTop;
-    if (style.paddingLeft) res.left = style.paddingLeft;
-    if (style.paddingRight) res.right = style.paddingRight;
-    if (style.paddingBottom) res.bottom = style.paddingBottom;
+    if (typeof style === 'object') {
+      if (style.padding) res.top = res.bottom = res.left = res.right = style.padding;
+      if (style.paddingHorizontal) res.left = res.right = style.paddingHorizontal;
+      if (style.paddingVertical) res.top = res.bottom = style.paddingVertical;
+      if (style.paddingTop) res.top = style.paddingTop;
+      if (style.paddingLeft) res.left = style.paddingLeft;
+      if (style.paddingRight) res.right = style.paddingRight;
+      if (style.paddingBottom) res.bottom = style.paddingBottom;
+    }
     return res;
   }
 
@@ -91,7 +96,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
     if (type === 'disabled') {
       // sum minPadding and padding
       const { style, ...otherProps } = props;
-      const flatStyle = StyleSheet.flatten(style);
+      const flatStyle = StyleSheet.flatten(style || {});
       const styleMinPadding = this.getStyleMinPadding(flatStyle);
       const stylePadding = this.getStylePadding(flatStyle);
       return (
@@ -116,7 +121,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
 
     } else if ((type === 'native' || type === undefined) && ReactNativeMoSafeAreaView) {
       const { style, ...otherProps } = props;
-      const flatStyle = StyleSheet.flatten(style);
+      const flatStyle = StyleSheet.flatten(style || {});
       const styleSafeArea = this.getStyleSafeArea(flatStyle);
       const styleMinPadding = this.getStyleMinPadding(flatStyle);
       const stylePadding = this.getStylePadding(flatStyle);
@@ -147,7 +152,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
         <SafeAreaConsumer>
           {(safeArea) => {
             const { style, onLayout, ...otherProps } = props;
-            const flatStyle = StyleSheet.flatten(style);
+            const flatStyle = StyleSheet.flatten(style || {});
             const styleSafeArea = this.getStyleSafeArea(flatStyle);
             const styleMinPadding = this.getStyleMinPadding(flatStyle);
             const stylePadding = this.getStylePadding(flatStyle);
@@ -183,7 +188,8 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
         <SafeAreaConsumer>
           {(safeArea) => {
             const { style, ...otherProps } = props;
-            const flatStyle = StyleSheet.flatten(style);
+            const flatStyle = StyleSheet.flatten(style || {});
+            console.log('flatStyle', flatStyle);
             const styleSafeArea = this.getStyleSafeArea(flatStyle);
             const styleMinPadding = this.getStyleMinPadding(flatStyle);
             const stylePadding = this.getStylePadding(flatStyle);
