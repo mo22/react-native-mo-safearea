@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "prepare": "rm -rf node_modules/react-native-mo-safearea/{example,node_modules}",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint ."
