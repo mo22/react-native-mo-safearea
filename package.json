@@ -1,0 +1,24 @@
+{
+  "name": "react-native-mo-safearea",
+  "version": "0.0.1",
+  "description": "react native safe area view and tools",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mo22/react-native-mo-safearea.git"
+  },
+  "author": "Moritz Moeller",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mo22/react-native-mo-safearea/issues"
+  },
+  "homepage": "https://github.com/mo22/react-native-mo-safearea#readme",
+  "devDependencies": {
+    "@types/react-native": "^0.60.7",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "rxjs": "^6.5.2"
+  }
+}

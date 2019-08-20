@@ -1,0 +1,3 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="de.mxs.reactnativemosafearea">
+  <!-- <activity android:configChanges="keyboard|keyboardHidden|orientation|screenSize" /> -->
+</manifest>
