@@ -8,7 +8,7 @@ export declare class SafeArea {
     private static safeAreaSubscribe;
 }
 export declare const SafeAreaConsumer: React.ComponentType<{
-    children: (value: unknown) => React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)>;
+    children: (value: Required<Insets>) => React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)>;
 }>;
 export interface SafeAreaInjectedProps {
     safeArea: Required<Insets>;
