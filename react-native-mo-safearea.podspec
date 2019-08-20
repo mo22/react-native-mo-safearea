@@ -6,7 +6,7 @@ Pod::Spec.new do |spec|
   name = "react-native-mo-safearea"
   spec.name = name
   spec.version = package['version']
-  spec.ios.deployment_target = '10.0'
+  spec.ios.deployment_target = '9.0'
   spec.requires_arc = true
   spec.source_files = "ios/*/*.{h,m}"
   spec.dependency "React"
@@ -16,4 +16,3 @@ Pod::Spec.new do |spec|
   spec.authors = package['author']
   spec.source = { :git => package['repository']['url'] }
 end
-
