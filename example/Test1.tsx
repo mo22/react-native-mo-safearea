@@ -36,6 +36,7 @@ export default class Test1 extends React.Component<NavigationInjectedProps & Saf
   };
 
   public render() {
+    console.log('prop', this.props);
     // switches / inputs for safeArea/padding?
     return (
       <SafeAreaView
@@ -47,8 +48,18 @@ export default class Test1 extends React.Component<NavigationInjectedProps & Saf
           ...this.state.padding,
         }}
       >
-        <KeyboardAvoidingView>
+        <KeyboardAvoidingView style={{ flex: 1 }}>
           <ScrollView style={{ backgroundColor: 'red', flex: 1 }}>
+
+            <View style={{ height: 20 }} />
+
+            {this.props.safeArea && keysOf(this.props.safeArea).map((i) => (
+              <ListItem
+                key={i}
+                title={i}
+                rightTitle={this.props.safeArea[i].toString()}
+              />
+            ))}
 
             <View style={{ height: 20 }} />
 
