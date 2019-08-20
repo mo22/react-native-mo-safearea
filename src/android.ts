@@ -1,9 +1,8 @@
 import { NativeModules, NativeEventEmitter, EmitterSubscription, Insets, Platform } from 'react-native';
 
 export interface Module {
+  enableSafeAreaEvent(enable: boolean): void;
   getSafeArea(): Promise<undefined|Required<Insets>>;
-  startSafeAreaEvent(): void;
-  stopSafeAreaEvent(): void;
 }
 
 export interface SafeAreaEvent {
