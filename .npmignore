@@ -1,7 +1,11 @@
-example
-node_modules
-.editorconfig
-tsconfig.json
-tslint.json
-copy.sh
+/node_modules
+xcuserdata
+project.xcworkspace
+/*.tgz
+
+/example
+/.editorconfig
+/tsconfig.json
+/tslint.json
+/copy.sh
 
