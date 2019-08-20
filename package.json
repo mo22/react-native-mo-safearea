@@ -4,6 +4,13 @@
   "description": "react native safe area view and tools",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "files": [
+    "package.json",
+    "src/*",
+    "lib/*",
+    "android",
+    "ios/**/*.{h,m,pbxproj}"
+  ],
   "scripts": {},
   "repository": {
     "type": "git",
