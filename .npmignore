@@ -1,4 +1,5 @@
 /example
+/node_modules
 /.editorconfig
 /tsconfig.json
 /tslint.json
