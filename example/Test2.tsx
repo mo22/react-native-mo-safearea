@@ -11,6 +11,6 @@ export default class Test2 extends React.Component<NavigationInjectedProps> {
     return (
       <View style={{ backgroundColor: 'red', flex: 1 }}>
       </View>
-    )
+    );
   }
 }
