@@ -1,7 +1,6 @@
 import { EmitterSubscription, Insets } from 'react-native';
 export interface Module {
     initialSafeArea: undefined | Required<Insets>;
-    enableSafeAreaEvent(enable: boolean): void;
     getSafeArea(): Promise<undefined | Required<Insets>>;
 }
 export interface SafeAreaEvent {
