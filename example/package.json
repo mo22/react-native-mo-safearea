@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "prepare": "rm -rf node_modules/react-native-mo-safearea/{example,node_modules}",
+    "prepare": "rm -rf node_modules/react-native-mo-safearea/{example,node_modules}; ( cd ios; pod update --no-repo-update; );",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint ."
@@ -14,6 +14,7 @@
     "react-native-elements": "^1.1.0",
     "react-native-gesture-handler": "^1.3.0",
     "react-native-mo-safearea": "file:../",
+    "react-native-vector-icons": "^6.6.0",
     "react-navigation": "^3.11.1"
   },
   "devDependencies": {
