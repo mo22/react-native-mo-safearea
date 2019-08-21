@@ -1,9 +1,9 @@
 ## TODO
 
-- [ ] remove dependencies
+- [ ] remove dependencies (rxjs)
 - [ ] forceInsets always/never/auto?
+- [ ] implement measure in react-native (https://github.com/react-native-community/react-native-safe-area-view/blob/master/index.js)
 - [ ] implenent measure natively (complete offset including scroll views? if possible?)
-- [ ] implement measure - can we get the layout relative to our parent? maybe native?
 - [ ] web/browser version
 - [ ] docs
 - [ ] publish
