@@ -14,4 +14,4 @@ export declare const SafeAreaConsumer: React.ComponentType<{
 export interface SafeAreaInjectedProps {
     safeArea: Required<Insets>;
 }
-export declare const withSafeArea: <Props extends unknown, State, ComponentType extends React.ComponentClass<Props, State>>(component: ComponentType & React.ComponentClass<Props, any>) => ComponentType & (new (props: Pick<Props, Exclude<keyof Props, never>>, context?: any) => React.Component<Pick<Props, Exclude<keyof Props, never>>, State, any>);
+export declare const withSafeArea: any;

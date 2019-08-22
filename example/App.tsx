@@ -11,6 +11,8 @@ const AppNavigator = createStackNavigator({
 
 const AppContainer = createAppContainer(AppNavigator);
 
+const test = new BehaviourSubject();
+
 class App extends React.PureComponent<{}> {
   public render() {
     return (
