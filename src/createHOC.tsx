@@ -1,8 +1,8 @@
 import * as React from 'react';
+// import hoistStatics from 'hoist-non-react-statics';
 
 export function hoistStatics(target: any, source: any) {
   for (const key of [...Object.getOwnPropertyNames(source), ...Object.getOwnPropertySymbols(source)]) {
-    // overwrite or not?
     const descriptor = Object.getOwnPropertyDescriptor(source, key);
     if (!descriptor) continue;
     try {
@@ -12,30 +12,7 @@ export function hoistStatics(target: any, source: any) {
   }
 }
 
-export function createHOC<Injected>(
-  callback: <Props extends Injected>(
-    component: React.ComponentType<Props>,
-    props: Props,
-    ref: any
-  ) => React.ComponentType<Omit<Props, keyof Injected>>
-) {
-
-  const res = function HOC<Props extends Injected>(
-    component: React.ComponentType<Props>
-  ): (
-    React.ComponentType<Omit<Props, keyof Injected>>
-  ) {
-
-    const render = (props: Props) => callback(component, props, undefined);
-
-    return render as any;
-
-  };
-
-  return res;
-}
-
-export function createStaticHOC<Injected>(callback: (component: any, props: any, ref: any) => any) {
+export function createHOC<Injected>(callback: (component: any, props: any, ref: any) => any) {
   const res = function HOC<
     Props extends Injected,
     State,
@@ -48,7 +25,6 @@ export function createStaticHOC<Injected>(callback: (component: any, props: any,
   ) {
     const render = (props: Props) => callback(component, props, undefined);
     hoistStatics(render, component);
-    // @TODO: is this really correct?
     return render as any;
   };
   return res;
@@ -62,14 +38,13 @@ export function createRefHOC<Injected>(callback: (component: any, props: any, re
   >(
     component: ComponentType & React.ComponentClass<Props>
   ): (
-    React.ForwardRefExoticComponent<React.PropsWithoutRef<Props> & React.RefAttributes<ComponentType>>
-    // React.ForwardRefExoticComponent<Props>
-    // ComponentType &
-    // ( new (props: Omit<Props, keyof Injected>, context?: any) => React.Component<Omit<Props, keyof Injected>, State> )
+    // ForwardRefExoticComponent<>
+    ComponentType &
+    ( new (props: Omit<Props, keyof Injected>, context?: any) => React.Component<Omit<Props, keyof Injected>, State> )
   ) {
     const forwardRef = React.forwardRef<ComponentType, Props>((props, ref) => callback(component, props, ref));
     hoistStatics(forwardRef, component);
-    return forwardRef;
+    return forwardRef as any;
   };
   return res;
 }
