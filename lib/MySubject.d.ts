@@ -1,5 +1,6 @@
 export interface Unsubscribable {
     unsubscribe(): void;
+    closed: boolean;
 }
 export interface Observer<T> {
     next: (value: T) => void;

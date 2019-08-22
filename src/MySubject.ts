@@ -1,5 +1,8 @@
+// https://github.com/tc39/proposal-observable
+
 export interface Unsubscribable {
-    unsubscribe(): void;
+  unsubscribe(): void;
+  closed: boolean;
 }
 
 export interface Observer<T> {
@@ -40,6 +43,7 @@ export class MySubject<T extends I, I = T> {
     }
     this._observers.add(observer);
     return {
+      closed: false,
       unsubscribe: () => {
         const wasEmpty = (this._observers.size === 0);
         this._observers.delete(observer);
