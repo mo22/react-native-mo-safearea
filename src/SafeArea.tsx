@@ -3,10 +3,10 @@ import { Insets, EmitterSubscription, View, findNodeHandle } from 'react-native'
 // import { BehaviorSubjectWithCallback } from './BehaviorSubjectWithCallback';
 import * as ios from './ios';
 import * as android from './android';
-import { createHOC } from './createHOC';
-import { MySubject } from './MySubject';
-import { createMySubjectConsumer } from './createMySubjectConsumer';
+import { MySubject, Unsubscribable } from './MySubject';
+// import { createMySubjectConsumer } from './createMySubjectConsumer';
 // import { createObservableConsumer } from './createObservableConsumer';
+// import { createHOC } from './createHOC';
 
 
 
@@ -76,37 +76,55 @@ export class SafeArea {
 
 
 
-// export class SafeAreaConsumerOld extends React.PureComponent<{
-//   children: (safeArea: Required<Insets>) => React.ReactElement
-// }, {
-//   safeArea: Insets;
-// }> {
-//   public state = { safeArea: SafeArea.safeArea.getValue() };
-//   private subscription: Subscription;
-//
-//   public componentDidMount() {
-//     this.subscription = SafeArea.safeArea.subscribe((value) => {
-//       this.setState({ safeArea: value });
-//     });
-//   }
-//
-//   public componentWillUnmount() {
-//     this.subscription.unsubscribe();
-//   }
-//
-//   public render() {
-//     return this.props.children(this.state.safeArea);
-//   }
-// }
+export class SafeAreaConsumer extends React.PureComponent<{
+  children: (safeArea: Required<Insets>) => React.ReactElement
+}, {
+  value: Insets;
+}> {
+  public state = { value: SafeArea.safeArea.value };
+  private subscription?: Unsubscribable;
+
+  public componentDidMount() {
+    this.subscription = SafeArea.safeArea.subscribe((value) => {
+      this.setState({ value: value });
+    });
+  }
+
+  public componentWillUnmount() {
+    this.subscription!.unsubscribe();
+  }
+
+  public render() {
+    return this.props.children(this.state.value);
+  }
+}
 
 // export const SafeAreaConsumer = createObservableConsumer(SafeArea.safeArea);
-export const SafeAreaConsumer = createMySubjectConsumer(SafeArea.safeArea);
+// export const SafeAreaConsumer = createMySubjectConsumer(SafeArea.safeArea);
 
 
 
 export interface SafeAreaInjectedProps {
   safeArea: Required<Insets>;
 }
+
+export function withSafeArea<
+  Props extends SafeAreaInjectedProps,
+>(
+  component: React.ComponentType<Props>
+): (
+  React.FunctionComponent<Omit<Props, keyof SafeAreaInjectedProps>>
+) {
+  const Component = component as React.ComponentType<any>; // @TODO hmpf.
+  return (props: Omit<Props, keyof SafeAreaInjectedProps>) => (
+    <SafeAreaConsumer>
+      {(safeArea) => (
+        <Component {...props} safeArea={safeArea} />
+      )}
+    </SafeAreaConsumer>
+  );
+}
+
 
 
 // import * as hoistStatics from 'hoist-non-react-statics';
@@ -139,13 +157,13 @@ export interface SafeAreaInjectedProps {
 //   return withStatics as any;
 // }
 
-export const withSafeArea = createHOC((Component, props, ref) => (
-  <SafeAreaConsumer>
-    {(safeArea) => (
-      <Component {...props} safeArea={safeArea} ref={ref} />
-    )}
-  </SafeAreaConsumer>
-));
+// export const withSafeArea = createHOC((Component, props, ref) => (
+//   <SafeAreaConsumer>
+//     {(safeArea) => (
+//       <Component {...props} safeArea={safeArea} ref={ref} />
+//     )}
+//   </SafeAreaConsumer>
+// ));
 
 
 

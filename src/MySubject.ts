@@ -4,6 +4,7 @@ export interface Unsubscribable {
   unsubscribe(): void;
   closed: boolean;
 }
+// @TODO: use NativeEventSubscription?
 
 export interface Observer<T> {
   next: (value: T) => void;

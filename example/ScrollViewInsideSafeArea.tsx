@@ -3,6 +3,7 @@ import { View, KeyboardAvoidingView } from 'react-native';
 import { NavigationInjectedProps, NavigationScreenOptions, ScrollView } from 'react-navigation';
 import { SafeAreaView, withSafeArea, SafeAreaInjectedProps } from 'react-native-mo-safearea';
 import { ListItem } from 'react-native-elements';
+import Header from './Header';
 
 function keysOf<T extends {}>(obj: T): (keyof T)[] {
   return Object.keys(obj) as any;
@@ -52,6 +53,7 @@ export default class ScrollViewInsideSafeArea extends React.Component<Navigation
       >
         <KeyboardAvoidingView style={{ flex: 1 }}>
           <ScrollView style={{ backgroundColor: 'white', flex: 1 }}>
+            <Header />
 
             <View style={{ height: 20 }} />
 
