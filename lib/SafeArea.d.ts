@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Insets, View } from 'react-native';
-import { BehaviorSubjectWithCallback } from './BehaviorSubjectWithCallback';
+import { MySubject } from './MySubject';
 export declare class SafeArea {
     private static getInitialSafeArea;
-    static readonly safeArea: BehaviorSubjectWithCallback<Required<Insets>>;
+    static readonly safeArea: MySubject<Required<Insets>, Required<Insets>>;
     private static safeAreaSubscription?;
     private static safeAreaSubscribe;
     static measureViewInsets(view: View): Promise<undefined | Required<Insets>>;

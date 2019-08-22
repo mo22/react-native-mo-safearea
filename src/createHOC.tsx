@@ -1,5 +1,16 @@
 import * as React from 'react';
-import hoistStatics from 'hoist-non-react-statics';
+// import hoistStatics from 'hoist-non-react-statics';
+
+export function hoistStatics(target: any, source: any) {
+  for (const key of [...Object.getOwnPropertyNames(source), ...Object.getOwnPropertySymbols(source)]) {
+    const descriptor = Object.getOwnPropertyDescriptor(source, key);
+    if (!descriptor) continue;
+    try {
+      Object.defineProperty(target, key, descriptor);
+    } catch (e) {
+    }
+  }
+}
 
 export function createHOC<Injected>(callback: (component: any, props: any, ref: any) => any) {
   const res = function HOC<
@@ -13,8 +24,8 @@ export function createHOC<Injected>(callback: (component: any, props: any, ref: 
     ( new (props: Omit<Props, keyof Injected>, context?: any) => React.Component<Omit<Props, keyof Injected>, State> )
   ) {
     const render = (props: Props) => callback(component, props, undefined);
-    const withStatics = hoistStatics(render, component as any);
-    return withStatics as any;
+    hoistStatics(render, component);
+    return render as any;
   };
   return res;
 }
@@ -27,12 +38,13 @@ export function createRefHOC<Injected>(callback: (component: any, props: any, re
   >(
     component: ComponentType & React.ComponentClass<Props>
   ): (
+    // ForwardRefExoticComponent<>
     ComponentType &
     ( new (props: Omit<Props, keyof Injected>, context?: any) => React.Component<Omit<Props, keyof Injected>, State> )
   ) {
     const forwardRef = React.forwardRef<ComponentType, Props>((props, ref) => callback(component, props, ref));
-    const withStatics = hoistStatics(forwardRef, component as any);
-    return withStatics as any;
+    hoistStatics(forwardRef, component);
+    return forwardRef as any;
   };
   return res;
 }

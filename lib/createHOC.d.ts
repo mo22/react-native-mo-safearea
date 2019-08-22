@@ -1,3 +1,4 @@
 import * as React from 'react';
+export declare function hoistStatics(target: any, source: any): void;
 export declare function createHOC<Injected>(callback: (component: any, props: any, ref: any) => any): <Props extends Injected, State, ComponentType extends React.ComponentClass<Props, State>>(component: ComponentType & React.ComponentClass<Props, any>) => ComponentType & (new (props: Pick<Props, Exclude<keyof Props, keyof Injected>>, context?: any) => React.Component<Pick<Props, Exclude<keyof Props, keyof Injected>>, State, any>);
 export declare function createRefHOC<Injected>(callback: (component: any, props: any, ref: any) => any): <Props extends Injected, State, ComponentType extends React.ComponentClass<Props, State>>(component: ComponentType & React.ComponentClass<Props, any>) => ComponentType & (new (props: Pick<Props, Exclude<keyof Props, keyof Injected>>, context?: any) => React.Component<Pick<Props, Exclude<keyof Props, keyof Injected>>, State, any>);
