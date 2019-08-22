@@ -2,6 +2,7 @@ import { EmitterSubscription, Insets } from 'react-native';
 export interface Module {
     enableSafeAreaEvent(enable: boolean): void;
     getSafeArea(): Promise<undefined | Required<Insets>>;
+    measureViewInsets(node: number): Promise<undefined | Required<Insets>>;
 }
 export interface SafeAreaEvent {
     safeArea: Required<Insets>;

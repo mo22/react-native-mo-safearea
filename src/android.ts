@@ -3,6 +3,7 @@ import { NativeModules, NativeEventEmitter, EmitterSubscription, Insets, Platfor
 export interface Module {
   enableSafeAreaEvent(enable: boolean): void;
   getSafeArea(): Promise<undefined|Required<Insets>>;
+  measureViewInsets(node: number): Promise<undefined|Required<Insets>>;
 }
 
 export interface SafeAreaEvent {

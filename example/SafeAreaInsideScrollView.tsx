@@ -42,7 +42,7 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
 
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}>
-        <ScrollView style={{ backgroundColor: 'red', flex: 1 }}>
+        <ScrollView style={{ backgroundColor: 'red', flex: 1, margin: 5 }}>
           <SafeAreaView
             style={{
               backgroundColor: 'purple',

@@ -32,6 +32,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
 
 - (void)safeAreaInsetsDidChange {
     NSLog(@"ReactNativeMoSafeAreaView.safeAreaInsetsDidChange");
+    // hmm not good while we're moving?
     [super safeAreaInsetsDidChange];
 //    [self invalidateSafeAreaInsets];
 }
@@ -43,18 +44,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
 }
 
 - (void)invalidateSafeAreaInsets {
-    
-    // this is for testing
-    if (1) {
-        NSLog(@"TREE ------------------");
-        UIView* cur = self;
-        while (cur) {
-            NSLog(@"cur is %@", cur);
-            cur = cur.superview;
-        }
-        NSLog(@"-----------------------");
-    }
-    
     if (@available(iOS 11.0, *)) {
 //        NSLog(@"ReactNativeMoSafeAreaView.invalidateSafeAreaInsets %@", NSStringFromUIEdgeInsets(self.safeAreaInsets));
         CGFloat d = MAX(

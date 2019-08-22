@@ -3,6 +3,7 @@ export interface Module {
     enableSafeAreaEvent(enable: boolean): void;
     initialSafeArea: undefined | Required<Insets>;
     getSafeArea(): Promise<undefined | Required<Insets>>;
+    measureViewInsets(node: number): Promise<undefined | Required<Insets>>;
 }
 export interface SafeAreaEvent {
     safeArea: Required<Insets>;

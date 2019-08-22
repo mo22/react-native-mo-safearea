@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { View, ViewProps, StyleSheet, requireNativeComponent, StyleProp, ViewStyle, LayoutRectangle, Dimensions } from 'react-native';
 import * as reactNative from 'react-native';
-import { SafeAreaConsumer } from './SafeArea';
-import * as test from './ios';
+import { SafeAreaConsumer, SafeArea } from './SafeArea';
 
 const ReactNativeMoSafeAreaView = requireNativeComponent && requireNativeComponent('ReactNativeMoSafeAreaView');
 
@@ -180,7 +179,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
                   if (onLayout) onLayout(e);
                   // this.setState({ layout: e.nativeEvent.layout });
                   if (this.ref.current) {
-                    test.Module!.measureNative(reactNative.findNodeHandle(this.ref.current)!).then((r) => {
+                    SafeArea.measureViewInsets(this.ref.current).then((r) => {
                       console.log('measureNative', r);
                     });
                     this.ref.current.measureInWindow((x, y, width, height) => {

@@ -35,5 +35,6 @@ export declare class SafeAreaView extends React.PureComponent<SafeAreaViewProps,
     private getStyleSafeArea;
     private getStyleMinPadding;
     private getStylePadding;
-    render(): JSX.Element;
+    private ref;
+    render(): JSX.Element | undefined;
 }

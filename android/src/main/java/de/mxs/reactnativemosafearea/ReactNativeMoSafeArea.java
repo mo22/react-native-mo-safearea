@@ -2,6 +2,7 @@ package de.mxs.reactnativemosafearea;
 
 import android.app.Activity;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowInsets;
 
@@ -15,6 +16,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.uimanager.UIManagerModule;
 
 import javax.annotation.Nonnull;
 
@@ -41,8 +43,8 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void startWatchingWindowInsets(final Activity activity) {
         if (windowInsetView != null) {
-          windowInsetView.setOnApplyWindowInsetsListener(null);
-          windowInsetView = null;
+            windowInsetView.setOnApplyWindowInsetsListener(null);
+            windowInsetView = null;
         }
         windowInsetView = activity.findViewById(android.R.id.content);
         windowInsetView.setOnApplyWindowInsetsListener((v, insets) -> {
@@ -131,9 +133,11 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
                     getReactApplicationContext().removeLifecycleEventListener(this);
                     getSafeAreaFromActivity(getCurrentActivity(), promise);
                 }
+
                 @Override
                 public void onHostPause() {
                 }
+
                 @Override
                 public void onHostDestroy() {
                 }
@@ -141,6 +145,17 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
         } else {
             getSafeAreaFromActivity(activity, promise);
         }
+    }
+
+    @SuppressWarnings({"unused"})
+    @ReactMethod
+    public void measureViewInsets(int node, Promise promise) {
+        UIManagerModule uiManager = this.getReactApplicationContext().getNativeModule(UIManagerModule.class);
+        uiManager.addUIBlock(nativeViewHierarchyManager -> {
+            View view = nativeViewHierarchyManager.resolveView(node);
+            Log.i("XXX", "got view " + view);
+            promise.resolve(null);
+        });
     }
 
 }

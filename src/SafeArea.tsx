@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Insets, EmitterSubscription } from 'react-native';
+import { Insets, EmitterSubscription, View, findNodeHandle } from 'react-native';
 import { BehaviorSubjectWithCallback } from './BehaviorSubjectWithCallback';
 import * as ios from './ios';
 import * as android from './android';
@@ -53,6 +53,17 @@ export class SafeArea {
         android.Module.enableSafeAreaEvent(false);
       }
     }
+  }
+
+  public static async measureViewInsets(view: View): Promise<undefined|Required<Insets>> {
+    const node = findNodeHandle(view);
+    if (!node) return undefined;
+    if (ios.Module) {
+      return ios.Module.measureViewInsets(node);
+    } else if (android.Module) {
+      return android.Module.measureViewInsets(node);
+    }
+    return undefined;
   }
 
 }
