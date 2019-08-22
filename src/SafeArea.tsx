@@ -112,19 +112,47 @@ export function withSafeArea<
   Props extends SafeAreaInjectedProps,
 >(
   component: React.ComponentType<Props>
-): (
-  React.FunctionComponent<Omit<Props, keyof SafeAreaInjectedProps>>
 ) {
-  const Component = component as React.ComponentType<any>; // @TODO hmpf.
-  return (props: Omit<Props, keyof SafeAreaInjectedProps>) => (
+  // const Component = component as React.ComponentType<any>; // @TODO hmpf.
+  const Component = component;
+  return React.forwardRef((props: Props, ref) => (
     <SafeAreaConsumer>
       {(safeArea) => (
-        <Component {...props} safeArea={safeArea} />
+        <Component {...props} safeArea={safeArea} ref={ref} />
       )}
     </SafeAreaConsumer>
-  );
+  ));
 }
 
+export function withSafeAreaDecorator<
+  Props extends SafeAreaInjectedProps,
+>(
+  component: React.ComponentClass<Props>
+): (
+  React.ComponentClass<Omit<Props, keyof SafeAreaInjectedProps>>
+) {
+  const Component = component as any;
+  const res = class extends React.PureComponent<Omit<Props, keyof SafeAreaInjectedProps>> {
+    public render() {
+      return (
+        <SafeAreaConsumer>
+          {(safeArea) => (
+            <Component {...this.props} safeArea={safeArea} />
+          )}
+        </SafeAreaConsumer>
+      );
+    }
+  };
+  for (const key of [...Object.getOwnPropertyNames(component), ...Object.getOwnPropertySymbols(component)]) {
+    const descriptor = Object.getOwnPropertyDescriptor(component, key);
+    if (!descriptor) continue;
+    try {
+      Object.defineProperty(res, key, descriptor);
+    } catch (e) {
+    }
+  }
+  return res as any;
+}
 
 
 // import * as hoistStatics from 'hoist-non-react-statics';

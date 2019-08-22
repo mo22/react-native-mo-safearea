@@ -24,4 +24,5 @@ export declare class SafeAreaConsumer extends React.PureComponent<{
 export interface SafeAreaInjectedProps {
     safeArea: Required<Insets>;
 }
-export declare function withSafeArea<Props extends SafeAreaInjectedProps>(component: React.ComponentType<Props>): (React.FunctionComponent<Omit<Props, keyof SafeAreaInjectedProps>>);
+export declare function withSafeArea<Props extends SafeAreaInjectedProps>(component: React.ComponentType<Props>): React.ForwardRefExoticComponent<React.PropsWithoutRef<Props> & React.RefAttributes<unknown>>;
+export declare function withSafeAreaDecorator<Props extends SafeAreaInjectedProps>(component: React.ComponentClass<Props>): (React.ComponentClass<Omit<Props, keyof SafeAreaInjectedProps>>);

@@ -2,8 +2,8 @@ import * as React from 'react';
 import { SafeAreaInjectedProps, withSafeArea } from 'react-native-mo-safearea';
 import { View, TouchableWithoutFeedback } from 'react-native';
 
-@withSafeArea
-export default class Header extends React.PureComponent<{} & SafeAreaInjectedProps> {
+// @withSafeArea
+const Header = withSafeArea(class Header extends React.PureComponent<{} & SafeAreaInjectedProps> {
 
   public render() {
     console.log('Header.render', this.props.safeArea);
@@ -20,4 +20,5 @@ export default class Header extends React.PureComponent<{} & SafeAreaInjectedPro
     );
   }
 
-}
+});
+export default Header;

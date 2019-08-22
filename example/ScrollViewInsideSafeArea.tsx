@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, KeyboardAvoidingView } from 'react-native';
 import { NavigationInjectedProps, NavigationScreenOptions, ScrollView } from 'react-navigation';
-import { SafeAreaView, withSafeArea, SafeAreaInjectedProps } from 'react-native-mo-safearea';
+import { SafeAreaView, withSafeAreaDecorator, SafeAreaInjectedProps } from 'react-native-mo-safearea';
 import { ListItem } from 'react-native-elements';
 import Header from './Header';
 
@@ -9,7 +9,7 @@ function keysOf<T extends {}>(obj: T): (keyof T)[] {
   return Object.keys(obj) as any;
 }
 
-@withSafeArea
+@withSafeAreaDecorator
 export default class ScrollViewInsideSafeArea extends React.Component<NavigationInjectedProps & SafeAreaInjectedProps> {
   public static navigationOptions: NavigationScreenOptions = {
     title: 'ScrollViewInsideSafeArea',
