@@ -8,10 +8,20 @@ export declare class SafeArea {
     private static safeAreaSubscribe;
     static measureViewInsets(view: View): Promise<undefined | Required<Insets>>;
 }
-export declare const SafeAreaConsumer: React.ComponentType<{
-    children: (value: Required<Insets>) => React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)>;
-}>;
+export declare class SafeAreaConsumer extends React.PureComponent<{
+    children: (safeArea: Required<Insets>) => React.ReactElement;
+}, {
+    value: Insets;
+}> {
+    state: {
+        value: Required<Insets>;
+    };
+    private subscription?;
+    componentDidMount(): void;
+    componentWillUnmount(): void;
+    render(): React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)>;
+}
 export interface SafeAreaInjectedProps {
     safeArea: Required<Insets>;
 }
-export declare const withSafeArea: any;
+export declare function withSafeArea<Props extends SafeAreaInjectedProps>(Component: React.ComponentType<Props>): (props: Props) => JSX.Element;

@@ -12,11 +12,26 @@ export function hoistStatics(target: any, source: any) {
   }
 }
 
-export function createHOC<Injected>(callback: (component: React.ComponentType<Injected>, props: {}) => React.ComponentType<{}>) {
-  const res = function HOC<Props extends Injected>(component: React.ComponentType<Injected>) {
-    const render = (props: Props) => callback(component, props);
-    return render as any as React.FunctionComponent<Omit<Props, keyof Injected>>;
+export function createHOC<Injected>(
+  callback: <Props extends Injected>(
+    component: React.ComponentType<Props>,
+    props: Props,
+    ref: any
+  ) => React.ComponentType<Omit<Props, keyof Injected>>
+) {
+
+  const res = function HOC<Props extends Injected>(
+    component: React.ComponentType<Props>
+  ): (
+    React.ComponentType<Omit<Props, keyof Injected>>
+  ) {
+
+    const render = (props: Props) => callback(component, props, undefined);
+
+    return render as any;
+
   };
+
   return res;
 }
 
