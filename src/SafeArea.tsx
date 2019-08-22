@@ -108,41 +108,57 @@ export interface SafeAreaInjectedProps {
   safeArea: Required<Insets>;
 }
 
+// @TODO higher order components are pretty darn annoying
+// composition makes access to static fields impossible (needed for react-navigation)
+// React.createRef() returns an exotic object (not a class constructor), which
+//   does not work with class/function decorators
+// and then there is typescript which is getting very complicated at this point.
+//
+
 export function withSafeArea<
   Props extends SafeAreaInjectedProps,
+  // Props,
 >(
   component: React.ComponentType<Props>
+  // component: React.ComponentType<Props & SafeAreaInjectedProps>
+): (
+  // React.ComponentType<Props>
+  React.ComponentType<Omit<Props, keyof SafeAreaInjectedProps>>
 ) {
-  // const Component = component as React.ComponentType<any>; // @TODO hmpf.
-  const Component = component;
-  return React.forwardRef((props: Props, ref) => (
+  const Component = component as React.ComponentType<any>; // @TODO hmpf.
+  // const Component = component;
+  return React.forwardRef((props: Omit<Props, keyof SafeAreaInjectedProps>, ref) => (
     <SafeAreaConsumer>
       {(safeArea) => (
-        <Component {...props} safeArea={safeArea} ref={ref} />
+        <Component safeArea={safeArea} ref={ref} {...props} />
       )}
     </SafeAreaConsumer>
-  ));
+  )) as any;
 }
 
 export function withSafeAreaDecorator<
   Props extends SafeAreaInjectedProps,
+  ComponentType extends React.ComponentType<Props>
 >(
-  component: React.ComponentClass<Props>
+  component: ComponentType & React.ComponentType<Props>
 ): (
-  React.ComponentClass<Omit<Props, keyof SafeAreaInjectedProps>>
+  ComponentType &
+  ( new (props: Omit<Props, keyof SafeAreaInjectedProps>, context?: any) => React.Component<Omit<Props, keyof SafeAreaInjectedProps>> )
 ) {
   const Component = component as any;
-  const res = class extends React.PureComponent<Omit<Props, keyof SafeAreaInjectedProps>> {
-    public render() {
-      return (
-        <SafeAreaConsumer>
-          {(safeArea) => (
-            <Component {...this.props} safeArea={safeArea} />
-          )}
-        </SafeAreaConsumer>
-      );
-    }
-  };
+  const res = (props: Omit<Props, keyof SafeAreaInjectedProps>) => (
+    <SafeAreaConsumer>
+      {(safeArea) => (
+        <Component {...props} safeArea={safeArea} />
+      )}
+    </SafeAreaConsumer>
+  );
+  // const res = class extends React.PureComponent<> {
+  //   public render() {
+  //     return (
+  //     );
+  //   }
+  // };
   for (const key of [...Object.getOwnPropertyNames(component), ...Object.getOwnPropertySymbols(component)]) {
     const descriptor = Object.getOwnPropertyDescriptor(component, key);
     if (!descriptor) continue;
