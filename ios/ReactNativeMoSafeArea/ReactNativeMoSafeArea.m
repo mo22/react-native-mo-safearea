@@ -89,17 +89,7 @@ RCT_EXPORT_METHOD(enableSafeAreaEvent:(BOOL)enable) {
     [self enableSafeAreaEvent:NO];
 }
 
-RCT_EXPORT_METHOD(measureViewInsets:(nonnull NSNumber*)node resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    RCTUIManager* uiManager = [self.bridge moduleForClass:[RCTUIManager class]];
-    if (!uiManager) {
-        resolve([NSNull null]);
-        return;
-    }
-    UIView* view = [uiManager viewForReactTag:node];
-    if (!view) {
-        resolve([NSNull null]);
-        return;
-    }
++ (UIEdgeInsets)getViewInsets:(UIView*)view {
     UIEdgeInsets insets = UIEdgeInsetsZero;
     UIView* cur = view;
 //    NSLog(@"check:");
@@ -116,6 +106,7 @@ RCT_EXPORT_METHOD(measureViewInsets:(nonnull NSNumber*)node resolve:(RCTPromiseR
             insets.bottom += container.contentSize.height - container.frame.size.height;
             insets.right += container.contentSize.width - container.frame.size.width;
         }
+        // @TODO: for scrollviews that are larger the parent frame size is smaller than the bottom offset... use this as a generic case?
         insets.top += cur.frame.origin.y;
         insets.left += cur.frame.origin.x;
         if (parent) {
@@ -126,6 +117,21 @@ RCT_EXPORT_METHOD(measureViewInsets:(nonnull NSNumber*)node resolve:(RCTPromiseR
         }
         cur = parent;
     }
+    return insets;
+}
+
+RCT_EXPORT_METHOD(measureViewInsets:(nonnull NSNumber*)node resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    RCTUIManager* uiManager = [self.bridge moduleForClass:[RCTUIManager class]];
+    if (!uiManager) {
+        resolve([NSNull null]);
+        return;
+    }
+    UIView* view = [uiManager viewForReactTag:node];
+    if (!view) {
+        resolve([NSNull null]);
+        return;
+    }
+    UIEdgeInsets insets = [[self class] getViewInsets:view];
     resolve(@{
         @"top": @(insets.top),
         @"bottom": @(insets.bottom),

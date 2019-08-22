@@ -1,10 +1,13 @@
 package de.mxs.reactnativemosafearea;
 
 import android.app.Activity;
+import android.graphics.Rect;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewParent;
 import android.view.WindowInsets;
+import android.widget.ScrollView;
 
 import androidx.annotation.RequiresApi;
 
@@ -107,7 +110,7 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             final WindowInsets insets = view.getRootWindowInsets();
             if (insets != null) {
-                final float density = activity.getResources().getDisplayMetrics().density;
+                final float density = getReactApplicationContext().getResources().getDisplayMetrics().density;
                 WritableMap args = Arguments.createMap();
                 args.putDouble("top", (1.0 / density) * insets.getStableInsetTop());
                 args.putDouble("left", (1.0 / density) * insets.getStableInsetLeft());
@@ -147,14 +150,54 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
         }
     }
 
+    @SuppressWarnings({"WeakerAccess"})
+    public static Rect getViewInsets(View view) {
+        Rect insets = new Rect();
+        View cur = view;
+//        Log.i("XXX", "trace:");
+        while (cur != null) {
+//            Log.i("XXX", "  " + cur);
+//            Log.i("XXX", "    pos " + cur.getX() + " " + cur.getY() + " " + cur.getWidth() + " " + cur.getHeight());
+            insets.left += cur.getX();
+            insets.top += cur.getY();
+            if (cur instanceof ScrollView) {
+                // @TODO: padding?
+                // @TODO: handle this in general somehow?
+                ScrollView scrollView = (ScrollView)cur;
+                if (scrollView.getChildCount() > 0) {
+                    insets.bottom += scrollView.getChildAt(0).getHeight() - cur.getHeight();
+                    insets.right += scrollView.getChildAt(0).getWidth() - cur.getWidth();
+                }
+            }
+            ViewParent viewParent = cur.getParent();
+            View parent = (viewParent instanceof View) ? ((View)viewParent) : null;
+            if (parent != null) {
+                insets.right += parent.getWidth() - (cur.getX() + cur.getWidth());
+                insets.bottom += parent.getHeight() - (cur.getY() + cur.getHeight());
+            }
+            cur = parent;
+        }
+        return insets;
+    }
+
     @SuppressWarnings({"unused"})
     @ReactMethod
     public void measureViewInsets(int node, Promise promise) {
         UIManagerModule uiManager = this.getReactApplicationContext().getNativeModule(UIManagerModule.class);
         uiManager.addUIBlock(nativeViewHierarchyManager -> {
             View view = nativeViewHierarchyManager.resolveView(node);
-            Log.i("XXX", "got view " + view);
-            promise.resolve(null);
+            if (view == null) {
+                promise.resolve(null);
+                return;
+            }
+            Rect insets = getViewInsets(view);
+            WritableMap res = Arguments.createMap();
+            final float density = getReactApplicationContext().getResources().getDisplayMetrics().density;
+            res.putDouble("top", insets.top / density);
+            res.putDouble("left", insets.left / density);
+            res.putDouble("right", insets.right / density);
+            res.putDouble("bottom", insets.bottom / density);
+            promise.resolve(res);
         });
     }
 
