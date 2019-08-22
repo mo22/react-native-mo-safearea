@@ -153,13 +153,17 @@ export function withSafeAreaDecorator<
       )}
     </SafeAreaConsumer>
   );
-  // const res = class extends React.PureComponent<> {
-  //   public render() {
-  //     return (
-  //     );
-  //   }
-  // };
+  res.component = component;
+  const skip: { [key: string]: boolean; } = {
+    arguments: true,
+    caller: true,
+    callee: true,
+    name: true,
+    prototype: true,
+    length: true,
+  };
   for (const key of [...Object.getOwnPropertyNames(component), ...Object.getOwnPropertySymbols(component)]) {
+    if (typeof key === 'string' && skip[key]) continue;
     const descriptor = Object.getOwnPropertyDescriptor(component, key);
     if (!descriptor) continue;
     try {

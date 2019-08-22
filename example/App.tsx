@@ -2,9 +2,6 @@ import * as React from 'react';
 import './patchReactNavigationSafeAreaView';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
-import { from, Subscribable } from 'rxjs';
-import { SafeArea } from 'react-native-mo-safearea';
-import { Insets } from 'react-native';
 
 const AppNavigator = createStackNavigator({
   Menu: { screen: require('./Menu').default },
@@ -14,14 +11,14 @@ const AppNavigator = createStackNavigator({
 
 const AppContainer = createAppContainer(AppNavigator);
 
-
-const test = from(SafeArea.safeArea as unknown as Subscribable<Required<Insets>>);
-// import { publishBehavior } from 'rxjs/operators';
-test.subscribe({
-  next: (val) => {
-    console.log('new insets', val);
-  },
-});
+// does not work.
+// const test = from(SafeArea.safeArea as unknown as Subscribable<Required<Insets>>);
+// // import { publishBehavior } from 'rxjs/operators';
+// test.subscribe({
+//   next: (val) => {
+//     console.log('new insets', val);
+//   },
+// });
 
 
 class App extends React.PureComponent<{}> {
