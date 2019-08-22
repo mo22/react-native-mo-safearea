@@ -96,6 +96,8 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
     return res;
   }
 
+  private ref = React.createRef<View>();
+
   public render() {
     const { type, ...props } = this.props;
 
@@ -171,9 +173,16 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
             return (
               <View
                 pointerEvents="box-none"
+                ref={this.ref}
                 onLayout={(e) => {
                   if (onLayout) onLayout(e);
-                  this.setState({ layout: e.nativeEvent.layout });
+                  // this.setState({ layout: e.nativeEvent.layout });
+                  if (this.ref.current) {
+                    this.ref.current.measureInWindow((x, y, width, height) => {
+                      console.log('measured', x, y, width, height);
+                      this.setState({ layout: { x: x, y: y, width: width, height: height }});
+                    });
+                  }
                 }}
                 {...otherProps}
                 style={{

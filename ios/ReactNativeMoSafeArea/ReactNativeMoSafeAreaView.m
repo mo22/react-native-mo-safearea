@@ -43,6 +43,18 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
 }
 
 - (void)invalidateSafeAreaInsets {
+    
+    // this is for testing
+    if (1) {
+        NSLog(@"TREE ------------------");
+        UIView* cur = self;
+        while (cur) {
+            NSLog(@"cur is %@", cur);
+            cur = cur.superview;
+        }
+        NSLog(@"-----------------------");
+    }
+    
     if (@available(iOS 11.0, *)) {
 //        NSLog(@"ReactNativeMoSafeAreaView.invalidateSafeAreaInsets %@", NSStringFromUIEdgeInsets(self.safeAreaInsets));
         CGFloat d = MAX(
@@ -78,7 +90,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
 @property BOOL safeAreaTop;
 @property BOOL safeAreaLeft;
 @property BOOL safeAreaRight;
-@property BOOL safeAreaBottom;
+@property(nonatomic) BOOL safeAreaBottom;
 
 @property CGFloat minPaddingTop;
 @property CGFloat minPaddingLeft;
@@ -94,14 +106,20 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
 
 @implementation ReactNativeMoSafeAreaViewShadow
 
+- (void)setSafeAreaBottom:(BOOL)safeAreaBottom {
+    NSLog(@"changed safeAreaBottom");
+    _safeAreaBottom = safeAreaBottom;
+    [self recalc];
+}
+
 - (void)setLocalData:(ReactNativeMoSafeAreaViewLocal*)localData {
-//    NSLog(@"ReactNativeMoSafeAreaViewShadow.setLocalData");
+    NSLog(@"ReactNativeMoSafeAreaViewShadow.setLocalData");
     _insets = localData.insets;
     [self recalc];
 }
 
 - (void)recalc {
-//    NSLog(@"ReactNativeMoSafeAreaViewShadow.recalc");
+    NSLog(@"ReactNativeMoSafeAreaViewShadow.recalc");
     UIEdgeInsets tmp;
     tmp.top = MAX(self.safeAreaTop ? _insets.top : 0, self.minPaddingTop) + self.addPaddingTop;
     tmp.left = MAX(self.safeAreaLeft ? _insets.left : 0, self.minPaddingLeft) + self.addPaddingLeft;

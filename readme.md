@@ -1,10 +1,14 @@
 ## TODO
 
 - [ ] remove dependencies (rxjs)
-- [ ] forceInsets always/never/auto?
-- [ ] implement measure in react-native (https://github.com/react-native-community/react-native-safe-area-view/blob/master/index.js)
-- [ ] implenent measure natively (complete offset including scroll views? if possible?)
-- [ ] web/browser version
+
+- [ ] SafeAreaView: forceInsets always/never/auto? true/false/undefined?
+- [ ] SafeAreaView: args as style or attribute?
+
+- [ ] native debug mode switch?
+
+- [ ] measure version
+
 - [ ] docs
 - [ ] publish
 

@@ -8,10 +8,9 @@ if ! [ -d $DIR/node_modules/react-native-mo-safearea ]; then
 fi
 
 if [ "$1" == "from" ]; then
-  cp $DIR/node_modules/react-native-mo-safearea/ios/ReactNativeMoSafeArea/* ./ios/ReactNativeMoSafeArea/
-  cp -r $DIR/node_modules/react-native-mo-safearea/src/* ./src/
-  cp $DIR/node_modules/react-native-mo-safearea/android/build.gradle ./android/
-  cp -a $DIR/node_modules/react-native-mo-safearea/android/src ./android/
+  cp -r $DIR/node_modules/react-native-mo-safearea/ios/ReactNativeMoSafeArea ./ios/
+  cp -r $DIR/node_modules/react-native-mo-safearea/{readme.md,src} .
+  cp -r $DIR/node_modules/react-native-mo-safearea/android/{src,build.gradle} ./android/
 fi
 
 if [ "$1" == "to" ]; then
