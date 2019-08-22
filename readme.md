@@ -1,9 +1,7 @@
 ## TODO
 
-- [ ] remove dependencies (rxjs)
-
 - [ ] SafeAreaView: forceInsets always/never/auto? true/false/undefined?
-- [ ] SafeAreaView: args as style or attribute?
+- [ ] SafeAreaView: args --as style or-- attribute?
 
 - [ ] native debug mode switch?
 
@@ -42,7 +40,8 @@ import {} ?
 ## problem: higher order components
 
 - React.forwardRef() returns a non-constructor element making it unusable for
-  class / function decorators.
+  class / function decorators. NOT TRUE! a decorator can return a number just
+  fine.
 
 - HOCs create a new class without static fields, which breaks react-navigation's
   navigationOptions prop
@@ -67,3 +66,5 @@ class Test extends React.PureComponent<{}> {
   // typings would be bad.
 }
 ```
+
+- who is havaing a problem here - actually just react-navigation?

@@ -4,9 +4,25 @@ import { createStackNavigator, createAppContainer } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const AppNavigator = createStackNavigator({
-  Menu: { screen: require('./Menu').default },
-  ScrollViewInsideSafeArea: { screen: require('./ScrollViewInsideSafeArea').default },
-  SafeAreaInsideScrollView: { screen: require('./SafeAreaInsideScrollView').default },
+  Menu: {
+    screen: require('./Menu').default,
+    navigationOptions: {
+      title: 'Menu',
+    },
+  },
+  ScrollViewInsideSafeArea: {
+    screen: require('./ScrollViewInsideSafeArea').default,
+    navigationOptions: {
+      title: 'ScrollViewInsideSafeArea',
+    },
+  },
+  SafeAreaInsideScrollView: {
+    screen: require('./SafeAreaInsideScrollView').default,
+    navigationOptions: {
+      title: 'SafeAreaInsideScrollView',
+      header: null,
+    },
+  },
 });
 
 const AppContainer = createAppContainer(AppNavigator);
@@ -19,6 +35,14 @@ const AppContainer = createAppContainer(AppNavigator);
 //     console.log('new insets', val);
 //   },
 // });
+
+function TestDecorator<T>(x: T): any {
+  return 3;
+}
+@TestDecorator
+export class TestClass {
+}
+console.log('XXX', TestClass);
 
 
 class App extends React.PureComponent<{}> {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, KeyboardAvoidingView } from 'react-native';
-import { NavigationInjectedProps, NavigationScreenOptions, ScrollView, NavigationActions } from 'react-navigation';
+import { NavigationInjectedProps, ScrollView, NavigationActions } from 'react-navigation';
 import { SafeAreaView, withSafeAreaDecorator, SafeAreaInjectedProps } from 'react-native-mo-safearea';
 import { ListItem } from 'react-native-elements';
 import Header from './Header';
@@ -11,11 +11,6 @@ function keysOf<T extends {}>(obj: T): (keyof T)[] {
 
 @withSafeAreaDecorator
 export default class SafeAreaInsideScrollView extends React.Component<NavigationInjectedProps & SafeAreaInjectedProps> {
-  public static navigationOptions: NavigationScreenOptions = {
-    title: 'SafeAreaInsideScrollView',
-    header: null,
-  };
-
   public state = {
     type: 'native' as SafeAreaView['props']['type'],
     safeArea: {
