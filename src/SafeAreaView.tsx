@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, ViewProps, StyleSheet, requireNativeComponent, StyleProp, ViewStyle, LayoutRectangle, Dimensions } from 'react-native';
 import * as reactNative from 'react-native';
 import { SafeAreaConsumer } from './SafeArea';
+import * as test from './ios';
 
 const ReactNativeMoSafeAreaView = requireNativeComponent && requireNativeComponent('ReactNativeMoSafeAreaView');
 
@@ -133,6 +134,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
       const styleSafeArea = this.getStyleSafeArea(flatStyle);
       const styleMinPadding = this.getStyleMinPadding(flatStyle);
       const stylePadding = this.getStylePadding(flatStyle);
+      console.log('render native with', styleSafeArea);
       return (
         <ReactNativeMoSafeAreaView
           pointerEvents="box-none"
@@ -166,7 +168,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
             const stylePadding = this.getStylePadding(flatStyle);
             const screen = Dimensions.get('screen');
             if (this.state.layout) {
-              console.log('XXX', screen.height, this.state.layout.y, this.state.layout.height);
+              console.log('layout is', screen.height, this.state.layout.y, this.state.layout.height);
             }
             // we also want our layout...
             // use Animated.View ?
@@ -178,6 +180,9 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
                   if (onLayout) onLayout(e);
                   // this.setState({ layout: e.nativeEvent.layout });
                   if (this.ref.current) {
+                    test.Module!.measureNative(reactNative.findNodeHandle(this.ref.current)!).then((r) => {
+                      console.log('measureNative', r);
+                    });
                     this.ref.current.measureInWindow((x, y, width, height) => {
                       console.log('measured', x, y, width, height);
                       this.setState({ layout: { x: x, y: y, width: width, height: height }});
@@ -198,13 +203,12 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
         </SafeAreaConsumer>
       );
 
-    } else if (type === 'simple' || true) {
+    } else if (type === 'simple') {
       return (
         <SafeAreaConsumer>
           {(safeArea) => {
             const { style, ...otherProps } = props;
             const flatStyle = StyleSheet.flatten(style || {});
-            console.log('flatStyle', flatStyle);
             const styleSafeArea = this.getStyleSafeArea(flatStyle);
             const styleMinPadding = this.getStyleMinPadding(flatStyle);
             const stylePadding = this.getStylePadding(flatStyle);

@@ -31,13 +31,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder*)decoder)
 RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
 
 - (void)safeAreaInsetsDidChange {
-//    NSLog(@"ReactNativeMoSafeAreaView.safeAreaInsetsDidChange");
+    NSLog(@"ReactNativeMoSafeAreaView.safeAreaInsetsDidChange");
     [super safeAreaInsetsDidChange];
-    [self invalidateSafeAreaInsets];
+//    [self invalidateSafeAreaInsets];
 }
 
 - (void)layoutSubviews {
-//    NSLog(@"ReactNativeMoSafeAreaView.layoutSubviews");
+    NSLog(@"ReactNativeMoSafeAreaView.layoutSubviews");
     [super layoutSubviews];
     [self invalidateSafeAreaInsets];
 }

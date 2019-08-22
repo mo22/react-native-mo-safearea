@@ -89,5 +89,48 @@ RCT_EXPORT_METHOD(enableSafeAreaEvent:(BOOL)enable) {
     [self enableSafeAreaEvent:NO];
 }
 
+RCT_EXPORT_METHOD(measureNative:(nonnull NSNumber*)node resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    RCTUIManager* uiManager = [self.bridge moduleForClass:[RCTUIManager class]];
+    if (!uiManager) {
+        resolve([NSNull null]);
+        return;
+    }
+    UIView* view = [uiManager viewForReactTag:node];
+    if (!view) {
+        resolve([NSNull null]);
+        return;
+    }
+    UIEdgeInsets insets = UIEdgeInsetsZero;
+    UIView* cur = view;
+    NSLog(@"check:");
+    while (cur) {
+        UIView* parent = cur.superview;
+        NSLog(@"  cur %@", view);
+        NSLog(@"    frame %@", NSStringFromCGRect(view.frame));
+        NSLog(@"    parent.frame %@", parent ? NSStringFromCGRect(parent.frame) : @"-");
+        if ([view conformsToProtocol:@protocol(UIFocusItemScrollableContainer)]) {
+            NSLog(@"    is UIFocusItemScrollableContainer");
+        }
+        if ([view isKindOfClass:[UIScrollView class]]) {
+            NSLog(@"    is UIScrollView");
+            UIScrollView* scrollView = (UIScrollView*)view;
+            NSLog(@"    contentOffset %@", NSStringFromCGPoint(scrollView.contentOffset));
+        }
+
+//        @property(nonatomic)         CGPoint                      contentOffset;                  // default CGPointZero
+//        @property(nonatomic)         CGSize                       contentSize;                    // default CGSizeZero
+//        @property(nonatomic)         UIEdgeInsets                 contentInset;                   // default UIEdgeInsetsZero. add additional scroll area around content
+        
+        insets.top += view.frame.origin.y;
+        cur = parent;
+    }
+    resolve(@{
+        @"top": @(insets.top),
+        @"bottom": @(insets.bottom),
+        @"left": @(insets.left),
+        @"right": @(insets.right),
+    });
+}
+
 @end
 

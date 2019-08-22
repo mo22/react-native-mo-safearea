@@ -18,10 +18,10 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
   public state = {
     type: 'native' as SafeAreaView['props']['type'],
     safeArea: {
-      safeAreaTop: true,
-      safeAreaLeft: true,
-      safeAreaRight: true,
-      safeAreaBottom: true,
+      top: true,
+      left: true,
+      right: true,
+      bottom: true,
     },
     minPadding: {
       minPaddingTop: 0,
@@ -47,7 +47,7 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
             style={{
               backgroundColor: 'purple',
               flex: 1,
-              ...this.state.safeArea,
+              safeArea: {...this.state.safeArea},
               ...this.state.minPadding,
               ...this.state.padding,
             }}
@@ -90,7 +90,7 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
               {keysOf(this.state.safeArea).map((i) => (
                 <ListItem
                   key={i}
-                  title={i}
+                  title={'safeArea.' + i}
                   switch={{
                     value: this.state.safeArea[i],
                     onValueChange: (value) => {

@@ -4,6 +4,7 @@ export interface Module {
   enableSafeAreaEvent(enable: boolean): void;
   initialSafeArea: undefined|Required<Insets>;
   getSafeArea(): Promise<undefined|Required<Insets>>;
+  measureNative(node: number): Promise<any>;
 }
 
 export interface SafeAreaEvent {
