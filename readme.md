@@ -10,6 +10,9 @@
 - [ ] docs
 - [ ] publish
 
+- [ ] npx react-native config ?! react-native.config.js ? https://github.com/react-native-community/cli/blob/master/docs/platforms.md
+- [ ] .ios.ts / .android.ts / .web.ts  with common .d.ts ?
+
 ```
 $ npm publish
 ```
