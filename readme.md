@@ -1,5 +1,7 @@
 ## TODO
 
+- [ ] add something to willUnmount?!
+
 - [ ] SafeAreaView: forceInsets always/never/auto? true/false/undefined?
 - [ ] SafeAreaView: args --as style or-- attribute?
 
