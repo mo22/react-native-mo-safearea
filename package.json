@@ -29,7 +29,7 @@
     "typescript": "^3.5.3"
   },
   "dependencies": {
-    "mo-core": "^0.1.0"
+    "mo-core": "^0.1.1"
   },
   "peerDependencies": {
     "react": "*",
