@@ -14,5 +14,5 @@ if [ "$1" == "from" ]; then
 fi
 
 if [ "$1" == "to" ]; then
-  rsync -a --exclude node_modules --exclude .git . $DIR/node_modules/react-native-mo-safearea/
+  rsync -a --exclude node_modules --exclude example --exclude .git . $DIR/node_modules/react-native-mo-safearea/
 fi

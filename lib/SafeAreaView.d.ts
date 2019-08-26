@@ -1,30 +1,18 @@
 import * as React from 'react';
-import { ViewProps, StyleProp, ViewStyle, LayoutRectangle } from 'react-native';
-export interface SafeAreaViewStyle extends ViewStyle {
-    minPadding?: number;
-    minPaddingBottom?: number;
-    minPaddingHorizontal?: number;
-    minPaddingLeft?: number;
-    minPaddingRight?: number;
-    minPaddingTop?: number;
-    minPaddingVertical?: number;
-    padding?: number;
-    paddingBottom?: number;
-    paddingHorizontal?: number;
-    paddingLeft?: number;
-    paddingRight?: number;
-    paddingTop?: number;
-    paddingVertical?: number;
-    safeArea?: {
-        top?: boolean;
-        left?: boolean;
-        right?: boolean;
-        bottom?: boolean;
-    };
-}
+import { ViewProps, LayoutRectangle } from 'react-native';
+declare type ForBorders<T> = undefined | T | {
+    top?: T;
+    left?: T;
+    right?: T;
+    bottom?: T;
+    horizontal?: T;
+    vertical?: T;
+};
 export interface SafeAreaViewProps extends ViewProps {
-    style?: StyleProp<SafeAreaViewStyle>;
     children?: React.ReactNode;
+    minPadding?: ForBorders<number>;
+    padding?: ForBorders<number>;
+    forceInsets?: ForBorders<undefined | 'always' | 'never'>;
     type?: 'react' | 'native' | 'disabled' | 'simple' | 'layout';
 }
 export interface SafeAreaViewState {
@@ -32,9 +20,6 @@ export interface SafeAreaViewState {
 }
 export declare class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAreaViewState> {
     state: SafeAreaViewState;
-    private getStyleSafeArea;
-    private getStyleMinPadding;
-    private getStylePadding;
-    private ref;
     render(): JSX.Element | undefined;
 }
+export {};
