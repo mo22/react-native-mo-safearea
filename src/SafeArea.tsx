@@ -1,65 +1,58 @@
 import * as React from 'react';
-import { Insets, EmitterSubscription, View, findNodeHandle } from 'react-native';
-// import { BehaviorSubjectWithCallback } from './BehaviorSubjectWithCallback';
+import { Insets, View, findNodeHandle } from 'react-native';
+import { StatefulEvent, Releaseable } from 'mo-core';
 import * as ios from './ios';
 import * as android from './android';
-import { MySubject, Unsubscribable } from './MySubject';
-// import { createMySubjectConsumer } from './createMySubjectConsumer';
-// import { createObservableConsumer } from './createObservableConsumer';
-// import { createHOC } from './createHOC';
 
 
 
 export class SafeArea {
-  private static getInitialSafeArea(): Required<Insets> {
-    if (ios.Module && ios.Module.initialSafeArea) {
-      return ios.Module.initialSafeArea;
-    }
-    if (android.Module) {
-      android.Module.getSafeArea().then((val) => {
-        if (val) this.safeArea.next(val);
-      });
-    }
-    return { top: 0, left: 0, bottom: 0, right: 0 };
-  }
 
-  public static readonly safeArea = new MySubject<Required<Insets>>(SafeArea.getInitialSafeArea(), (active) => {
-    SafeArea.safeAreaSubscribe(active);
-  });
-
-  // public static readonly safeArea = new BehaviorSubjectWithCallback<Required<Insets>>(SafeArea.getInitialSafeArea(), (active) => {
-  //   SafeArea.safeAreaSubscribe(active);
-  // });
-
-  private static safeAreaSubscription?: EmitterSubscription;
-
-  private static safeAreaSubscribe(active: boolean) {
-    if (active && !this.safeAreaSubscription) {
+  public static readonly safeArea = new StatefulEvent<Required<Insets>>(
+    (() => {
+      if (ios.Module && ios.Module.initialSafeArea) {
+        return ios.Module.initialSafeArea;
+      }
+      if (android.Module) {
+        android.Module.getSafeArea().then((val) => {
+          if (val) SafeArea.safeArea.value = val;
+        });
+      }
+      return { top: 0, left: 0, bottom: 0, right: 0 };
+    })(),
+    (emit) => {
       if (ios.Events && ios.Module) {
-        this.safeAreaSubscription = ios.Events.addListener('ReactNativeMoSafeArea', (rs) => {
-          if (JSON.stringify(rs.safeArea) === JSON.stringify(this.safeArea.value)) return;
+        let cur: Required<Insets>|undefined;
+        const sub = ios.Events.addListener('ReactNativeMoSafeArea', (rs) => {
+          if (JSON.stringify(rs.safeArea) === JSON.stringify(cur)) return;
+          cur = rs.safeArea;
           console.log('ReactNativeMoSafeArea.next', rs.safeArea);
-          this.safeArea.next(rs.safeArea);
+          emit(rs.safeArea);
         });
         ios.Module.enableSafeAreaEvent(true);
+        return () => {
+          sub.remove();
+          ios.Module!.enableSafeAreaEvent(false);
+        };
       } else if (android.Events && android.Module) {
-        this.safeAreaSubscription = android.Events.addListener('ReactNativeMoSafeArea', (rs) => {
-          if (JSON.stringify(rs.safeArea) === JSON.stringify(this.safeArea.value)) return;
+        let cur: Required<Insets>|undefined;
+        const sub = android.Events.addListener('ReactNativeMoSafeArea', (rs) => {
+          if (JSON.stringify(rs.safeArea) === JSON.stringify(cur)) return;
+          cur = rs.safeArea;
           console.log('ReactNativeMoSafeArea.next', rs.safeArea);
-          this.safeArea.next(rs.safeArea);
+          emit(rs.safeArea);
         });
         android.Module.enableSafeAreaEvent(true);
-      }
-    } else if (!active && this.safeAreaSubscription) {
-      this.safeAreaSubscription.remove();
-      this.safeAreaSubscription = undefined;
-      if (ios.Module) {
-        ios.Module.enableSafeAreaEvent(false);
-      } else if (android.Module) {
-        android.Module.enableSafeAreaEvent(false);
+        return () => {
+          sub.remove();
+          android.Module!.enableSafeAreaEvent(false);
+        };
+      } else {
+        return () => {
+        };
       }
     }
-  }
+  );
 
   public static async measureViewInsets(view: View): Promise<undefined|Required<Insets>> {
     const node = findNodeHandle(view);
@@ -82,7 +75,7 @@ export class SafeAreaConsumer extends React.PureComponent<{
   value: Insets;
 }> {
   public state = { value: SafeArea.safeArea.value };
-  private subscription?: Unsubscribable;
+  private subscription?: Releaseable;
 
   public componentDidMount() {
     this.subscription = SafeArea.safeArea.subscribe((value) => {
@@ -91,7 +84,7 @@ export class SafeAreaConsumer extends React.PureComponent<{
   }
 
   public componentWillUnmount() {
-    this.subscription!.unsubscribe();
+    this.subscription!.release();
   }
 
   public render() {

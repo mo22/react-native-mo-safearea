@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { Insets, View } from 'react-native';
-import { MySubject } from './MySubject';
+import { StatefulEvent } from 'mo-core';
 export declare class SafeArea {
-    private static getInitialSafeArea;
-    static readonly safeArea: MySubject<Required<Insets>, Required<Insets>>;
-    private static safeAreaSubscription?;
-    private static safeAreaSubscribe;
+    static readonly safeArea: StatefulEvent<Required<Insets>>;
     static measureViewInsets(view: View): Promise<undefined | Required<Insets>>;
 }
 export declare class SafeAreaConsumer extends React.PureComponent<{
