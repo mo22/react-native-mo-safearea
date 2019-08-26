@@ -9,7 +9,8 @@
     "src/*",
     "lib/*",
     "android",
-    "ios/**/*.{h,m,pbxproj}"
+    "ios/**/*.{h,m,pbxproj}",
+    "*.podspec"
   ],
   "scripts": {},
   "repository": {

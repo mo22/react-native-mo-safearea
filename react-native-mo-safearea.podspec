@@ -3,7 +3,7 @@ require 'json'
 package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
 
 Pod::Spec.new do |spec|
-  name = "react-native-mo-safearea"
+  name = package['name']
   spec.name = name
   spec.version = package['version']
   spec.ios.deployment_target = '9.0'
