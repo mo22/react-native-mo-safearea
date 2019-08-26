@@ -1,5 +1,7 @@
 ## TODO
 
+- [ ] problem: initial layout with react-navigation is often off-screen.
+
 - [ ] add something to willUnmount?!
 
 - [ ] SafeAreaView: forceInsets always/never/auto? true/false/undefined?

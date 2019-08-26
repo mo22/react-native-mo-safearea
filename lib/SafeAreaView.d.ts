@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ViewProps, LayoutRectangle } from 'react-native';
+import { ViewProps, LayoutRectangle, Insets } from 'react-native';
 declare type ForBorders<T> = undefined | T | {
     top?: T;
     left?: T;
@@ -17,6 +17,7 @@ export interface SafeAreaViewProps extends ViewProps {
 }
 export interface SafeAreaViewState {
     layout?: LayoutRectangle;
+    insets?: Required<Insets>;
 }
 export declare class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAreaViewState> {
     state: SafeAreaViewState;

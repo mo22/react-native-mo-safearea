@@ -12,12 +12,12 @@ function keysOf<T extends {}>(obj: T): (keyof T)[] {
 @withSafeAreaDecorator
 export default class SafeAreaInsideScrollView extends React.Component<NavigationInjectedProps & SafeAreaInjectedProps> {
   public state = {
-    type: 'native' as SafeAreaView['props']['type'],
+    type: 'layout' as SafeAreaView['props']['type'],
     forceInsets: {
-      top: 'always' as 'always'|'never'|'auto',
-      left: 'always' as 'always'|'never'|'auto',
-      right: 'always' as 'always'|'never'|'auto',
-      bottom: 'always' as 'always'|'never'|'auto',
+      top: 'auto' as 'always'|'never'|'auto',
+      left: 'auto' as 'always'|'never'|'auto',
+      right: 'auto' as 'always'|'never'|'auto',
+      bottom: 'auto' as 'always'|'never'|'auto',
     },
     minPadding: {
       top: 0,
@@ -91,7 +91,7 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
                   title={'forceInsets.' + i}
                   buttonGroup={{
                     selectedIndex: forceInsets.indexOf(this.state.forceInsets[i]),
-                    buttons: types as string[],
+                    buttons: forceInsets as string[],
                     onPress: (selectedIndex) => {
                       this.state.forceInsets[i] = forceInsets[selectedIndex];
                       this.forceUpdate();

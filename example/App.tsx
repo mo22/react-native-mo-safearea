@@ -27,24 +27,6 @@ const AppNavigator = createStackNavigator({
 
 const AppContainer = createAppContainer(AppNavigator);
 
-// does not work.
-// const test = from(SafeArea.safeArea as unknown as Subscribable<Required<Insets>>);
-// // import { publishBehavior } from 'rxjs/operators';
-// test.subscribe({
-//   next: (val) => {
-//     console.log('new insets', val);
-//   },
-// });
-
-function TestDecorator<T>(x: T): any {
-  return 3;
-}
-@TestDecorator
-export class TestClass {
-}
-console.log('XXX', TestClass);
-
-
 class App extends React.PureComponent<{}> {
   public render() {
     return (
@@ -56,6 +38,7 @@ class App extends React.PureComponent<{}> {
           }
         }}
         loadNavigationState={async () => {
+          if (1) return null;
           try {
             return JSON.parse(await AsyncStorage.getItem('navState') || 'null');
           } catch (e) {
