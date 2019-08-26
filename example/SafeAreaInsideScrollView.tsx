@@ -13,28 +13,29 @@ function keysOf<T extends {}>(obj: T): (keyof T)[] {
 export default class SafeAreaInsideScrollView extends React.Component<NavigationInjectedProps & SafeAreaInjectedProps> {
   public state = {
     type: 'native' as SafeAreaView['props']['type'],
-    safeArea: {
-      top: true,
-      left: true,
-      right: true,
-      bottom: true,
+    forceInsets: {
+      top: 'always' as 'always'|'never'|'auto',
+      left: 'always' as 'always'|'never'|'auto',
+      right: 'always' as 'always'|'never'|'auto',
+      bottom: 'always' as 'always'|'never'|'auto',
     },
     minPadding: {
-      minPaddingTop: 0,
-      minPaddingLeft: 0,
-      minPaddingRight: 0,
-      minPaddingBottom: 0,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
     },
     padding: {
-      paddingTop: 0,
-      paddingLeft: 0,
-      paddingRight: 0,
-      paddingBottom: 0,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
     },
   };
 
   public render() {
     const types: SafeAreaView['props']['type'][] = ['react', 'native', 'disabled', 'simple', 'layout'];
+    const forceInsets: ('always'|'never'|'auto')[] = ['always', 'never', 'auto'];
 
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}>
@@ -43,10 +44,10 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
             style={{
               backgroundColor: 'purple',
               flex: 1,
-              safeArea: {...this.state.safeArea},
-              ...this.state.minPadding,
-              ...this.state.padding,
             }}
+            minPadding={this.state.minPadding}
+            padding={this.state.padding}
+            forceInsets={this.state.forceInsets}
             type={this.state.type}
           >
             <View style={{ backgroundColor: 'white' }}>
@@ -84,14 +85,15 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
 
               <View style={{ height: 20 }} />
 
-              {keysOf(this.state.safeArea).map((i) => (
+              {keysOf(this.state.forceInsets).map((i) => (
                 <ListItem
                   key={i}
-                  title={'safeArea.' + i}
-                  switch={{
-                    value: this.state.safeArea[i],
-                    onValueChange: (value) => {
-                      this.state.safeArea[i] = value;
+                  title={'forceInsets.' + i}
+                  buttonGroup={{
+                    selectedIndex: forceInsets.indexOf(this.state.forceInsets[i]),
+                    buttons: types as string[],
+                    onPress: (selectedIndex) => {
+                      this.state.forceInsets[i] = forceInsets[selectedIndex];
                       this.forceUpdate();
                     },
                   }}

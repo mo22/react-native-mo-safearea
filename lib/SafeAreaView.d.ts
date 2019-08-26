@@ -12,7 +12,7 @@ export interface SafeAreaViewProps extends ViewProps {
     children?: React.ReactNode;
     minPadding?: ForBorders<number>;
     padding?: ForBorders<number>;
-    forceInsets?: ForBorders<undefined | 'always' | 'never'>;
+    forceInsets?: ForBorders<'always' | 'never' | 'auto'>;
     type?: 'react' | 'native' | 'disabled' | 'simple' | 'layout';
 }
 export interface SafeAreaViewState {
@@ -20,6 +20,7 @@ export interface SafeAreaViewState {
 }
 export declare class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAreaViewState> {
     state: SafeAreaViewState;
+    private ref;
     render(): JSX.Element | undefined;
 }
 export {};

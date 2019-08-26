@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { View, ViewProps, StyleSheet, LayoutRectangle } from 'react-native';
+import { View, ViewProps, StyleSheet, LayoutRectangle, Dimensions } from 'react-native';
 import * as reactNative from 'react-native';
-import { SafeAreaConsumer } from './SafeArea';
+import { SafeAreaConsumer, SafeArea } from './SafeArea';
 
 // const ReactNativeMoSafeAreaView = requireNativeComponent && requireNativeComponent('ReactNativeMoSafeAreaView');
 
@@ -47,7 +47,7 @@ export interface SafeAreaViewProps extends ViewProps {
 
   minPadding?: ForBorders<number>;
   padding?: ForBorders<number>;
-  forceInsets?: ForBorders<undefined|'always'|'never'>;
+  forceInsets?: ForBorders<'always'|'never'|'auto'>;
   // react: use react native SafeAreaView
   // disabled: just return a view
   // js: use js with safeArea insets
@@ -63,13 +63,13 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
   public state: SafeAreaViewState = {
   };
 
-  // private ref = React.createRef<View>();
+  private ref = React.createRef<View>();
 
   public render() {
     const { minPadding, padding, forceInsets, type, ...props } = this.props;
     const bMinPadding = fromBorders(minPadding, 0);
     const bPadding = fromBorders(padding, 0);
-    const bForceInsets = fromBorders(forceInsets);
+    const bForceInsets = fromBorders(forceInsets, 'auto');
 
     if (type === 'disabled') {
       // sum minPadding and padding
@@ -121,48 +121,56 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
     //     />
     //   );
 
-    // } else if (type === 'layout') {
-    //   return (
-    //     <SafeAreaConsumer>
-    //       {(safeArea) => {
-    //         const { style, onLayout, ...otherProps } = props;
-    //         const flatStyle = StyleSheet.flatten(style || {});
-    //         const screen = Dimensions.get('screen');
-    //         if (this.state.layout) {
-    //           console.log('XXX layout is', screen.height, this.state.layout.y, this.state.layout.height);
-    //         }
-    //         // we also want our layout...
-    //         // use Animated.View ?
-    //         return (
-    //           <View
-    //             pointerEvents="box-none"
-    //             ref={this.ref}
-    //             onLayout={(e) => {
-    //               if (onLayout) onLayout(e);
-    //               // this.setState({ layout: e.nativeEvent.layout });
-    //               if (this.ref.current) {
-    //                 SafeArea.measureViewInsets(this.ref.current).then((r) => {
-    //                   console.log('XXX measureNative', r);
-    //                 });
-    //                 this.ref.current.measureInWindow((x, y, width, height) => {
-    //                   console.log('XXX measured', x, y, width, height);
-    //                   this.setState({ layout: { x: x, y: y, width: width, height: height }});
-    //                 });
-    //               }
-    //             }}
-    //             {...otherProps}
-    //             style={{
-    //               ...flatStyle,
-    //               paddingTop: Math.max(styleSafeArea.top ? safeArea.top : 0, bMinPadding.top) + bPadding.top,
-    //               paddingLeft: Math.max(styleSafeArea.left ? safeArea.left : 0, bMinPadding.left) + bPadding.left,
-    //               paddingRight: Math.max(styleSafeArea.right ? safeArea.right : 0, bMinPadding.right) + bPadding.right,
-    //               paddingBottom: Math.max(styleSafeArea.bottom ? safeArea.bottom : 0, bMinPadding.bottom) + bPadding.bottom,
-    //             }}
-    //           />
-    //         );
-    //       }}
-    //     </SafeAreaConsumer>
-    //   );
+    } else if (type === 'layout') {
+      return (
+        <SafeAreaConsumer>
+          {(safeArea) => {
+            console.log('XXX layout', safeArea);
+            const { style, onLayout, ...otherProps } = props;
+            const flatStyle = StyleSheet.flatten(style || {});
+            const screen = Dimensions.get('screen');
+            if (this.state.layout) {
+              console.log('XXX layout is', screen.height, this.state.layout.y, this.state.layout.height);
+            }
+            // const paddingStyle = {
+            //   paddingTop: (
+            //     (bForceInsets.top === 'never') ? 0 :
+            //     (bForceInsets.top === 'always') ? safeArea.top :
+            //     0,
+            //   ),
+            // };
+            // paddingTop: Math.max(styleSafeArea.top ? safeArea.top : 0, bMinPadding.top) + bPadding.top,
+            // paddingLeft: Math.max(styleSafeArea.left ? safeArea.left : 0, bMinPadding.left) + bPadding.left,
+            // paddingRight: Math.max(styleSafeArea.right ? safeArea.right : 0, bMinPadding.right) + bPadding.right,
+            // paddingBottom: Math.max(styleSafeArea.bottom ? safeArea.bottom : 0, bMinPadding.bottom) + bPadding.bottom,
+            // we also want our layout...
+            // use Animated.View ?
+            return (
+              <View
+                pointerEvents="box-none"
+                ref={this.ref}
+                onLayout={(e) => {
+                  if (onLayout) onLayout(e);
+                  // this.setState({ layout: e.nativeEvent.layout });
+                  if (this.ref.current) {
+                    SafeArea.measureViewInsets(this.ref.current).then((r) => {
+                      console.log('XXX measureNative', r);
+                    });
+                    this.ref.current.measureInWindow((x, y, width, height) => {
+                      console.log('XXX measured', x, y, width, height);
+                      this.setState({ layout: { x: x, y: y, width: width, height: height }});
+                    });
+                  }
+                }}
+                {...otherProps}
+                style={{
+                  ...flatStyle,
+                }}
+              />
+            );
+          }}
+        </SafeAreaConsumer>
+      );
 
     } else if (type === 'simple') {
       return (
