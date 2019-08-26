@@ -69,6 +69,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
     const { minPadding, padding, forceInsets, type, ...props } = this.props;
     const bMinPadding = fromBorders(minPadding, 0);
     const bPadding = fromBorders(padding, 0);
+    // @TODO: bPadding = style.padding ?
     const bForceInsets = fromBorders(forceInsets, 'auto');
 
     if (type === 'disabled') {
@@ -95,42 +96,42 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
         <reactNative.SafeAreaView {...props} />
       );
 
-    // } else if ((type === 'native' || type === undefined) && ReactNativeMoSafeAreaView) {
-    //   const { style, ...otherProps } = props;
-    //   const flatStyle = StyleSheet.flatten(style || {});
-    //   console.log('render native with', styleSafeArea);
-    //   return (
-    //     <ReactNativeMoSafeAreaView
-    //       pointerEvents="box-none"
-    //       {...otherProps}
-    //       safeAreaTop={styleSafeArea.top}
-    //       safeAreaLeft={styleSafeArea.left}
-    //       safeAreaRight={styleSafeArea.right}
-    //       safeAreaBottom={styleSafeArea.bottom}
-    //       minPaddingTop={bMinPadding.top}
-    //       minPaddingLeft={bMinPadding.left}
-    //       minPaddingRight={bMinPadding.right}
-    //       minPaddingBottom={bMinPadding.bottom}
-    //       addPaddingTop={bPadding.top}
-    //       addPaddingLeft={bPadding.left}
-    //       addPaddingRight={bPadding.right}
-    //       addPaddingBottom={bPadding.bottom}
-    //       style={{
-    //         ...flatStyle,
-    //       }}
-    //     />
-    //   );
+      // } else if ((type === 'native' || type === undefined) && ReactNativeMoSafeAreaView) {
+      //   const { style, ...otherProps } = props;
+      //   const flatStyle = StyleSheet.flatten(style || {});
+      //   console.log('render native with', styleSafeArea);
+      //   return (
+      //     <ReactNativeMoSafeAreaView
+      //       pointerEvents="box-none"
+      //       {...otherProps}
+      //       safeAreaTop={styleSafeArea.top}
+      //       safeAreaLeft={styleSafeArea.left}
+      //       safeAreaRight={styleSafeArea.right}
+      //       safeAreaBottom={styleSafeArea.bottom}
+      //       minPaddingTop={bMinPadding.top}
+      //       minPaddingLeft={bMinPadding.left}
+      //       minPaddingRight={bMinPadding.right}
+      //       minPaddingBottom={bMinPadding.bottom}
+      //       addPaddingTop={bPadding.top}
+      //       addPaddingLeft={bPadding.left}
+      //       addPaddingRight={bPadding.right}
+      //       addPaddingBottom={bPadding.bottom}
+      //       style={{
+      //         ...flatStyle,
+      //       }}
+      //     />
+      //   );
 
-    } else if (type === 'layout') {
+    } else if (type === 'layout' || type === undefined) {
       return (
         <SafeAreaConsumer>
           {(safeArea) => {
-            console.log('XXX layout', safeArea);
+            console.log('SafeAreaView safeArea', safeArea);
             const { style, onLayout, ...otherProps } = props;
             const flatStyle = StyleSheet.flatten(style || {});
             const screen = Dimensions.get('screen');
             if (this.state.layout) {
-              console.log('XXX layout is', screen.height, this.state.layout.y, this.state.layout.height);
+              console.log('SafeAreaView layout', screen.height, this.state.layout.y, this.state.layout.height);
             }
             // const paddingStyle = {
             //   paddingTop: (
