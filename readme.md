@@ -1,33 +1,51 @@
-## TODO
+# react-native-mo-safearea
 
-- [ ] problem: initial layout with react-navigation is often off-screen.
+## Reason
 
-- [ ] add something to willUnmount?!
+Some areas of the screen are not freely usable:
+- cutouts for camera
+- translucent status / navigation bars
 
-- [ ] SafeAreaView: forceInsets always/never/auto? true/false/undefined?
-- [ ] SafeAreaView: args --as style or-- attribute?
-
-- [ ] native debug mode switch?
-
-- [ ] measure version
-
-- [ ] docs
-- [ ] publish
-
-- [ ] npx react-native config ?! react-native.config.js ? https://github.com/react-native-community/cli/blob/master/docs/platforms.md
-- [ ] .ios.ts / .android.ts / .web.ts  with common .d.ts ?
-
-```
-$ npm publish
-```
+This module provides the dimensions of those areas and a view that adds padding to avoid these areas.
 
 ## Usage
 
+see example/ project for examples.
+[link]
+
 ```js
-import {} ?
+import { SafeArea } from 'react-native-mo-safearea';
+
+SafeArea.safeArea.subscribe();
+
+SafeAreaConsumer
+
+SafeAreaView
+
 ```
 
+## TODO
+- [ ] add an additional view somewhere
+- [ ] subnavigation?
+- [ ] problem: initial layout with react-navigation is often off-screen.
+- [ ] docs
+- [ ] publish
+
+## Issues & Caveats
+
+- If the `SafeAreaView` is animated off-screen the padding might get jerky.
+
+- We do not provide a higher-order-component wrapper (`withSafeArea`) as these can be a bit tricky and have issues:
+  - References are one issue (`React.forwardRef` can help here)
+  - Access to static properties do not work (bad for `react-navigation`)
+  - Does not work as decorator as decorators may not return a different type as result
+
+- This library depends on Package `mo-core` for `StatefulEvent`. Ideally this could be done via `rxjs` `BehaviorSubject` (large dependency) or native `Observer` (still not in JS spec).
+
 ## react library setup notes
+
+- npx react-native config ?! react-native.config.js ? https://github.com/react-native-community/cli/blob/master/docs/platforms.md
+- metro bundler does not tree-shake based on Platform.OS
 
 - react-native init example?
 - using file:../ does not obey package.json files or npmignore. Need to use git? No git+file.
@@ -37,12 +55,6 @@ import {} ?
 - update android/src/main/java/*
 - rename ios/*
 - update ios/*/project.pbxproj search and replace?
-
-## problem: events
-
-- events / BehaviorSubject use rxjs? something else? need current value and changes?
-- rxjs.from() / rxjs.fromEvent() ?
-- addEventListener() / removeEventListener()? cumbersome. sucks.
 
 ## problem: higher order components
 
@@ -54,7 +66,6 @@ import {} ?
   navigationOptions prop
 
 - instead internally subscribe Subject to state? not the supposed react way
-
 ```js
 class Test extends React.PureComponent<{ value: Subject<number> }> {
   state: {

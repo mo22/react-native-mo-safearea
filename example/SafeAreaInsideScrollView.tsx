@@ -9,6 +9,13 @@ function keysOf<T extends {}>(obj: T): (keyof T)[] {
   return Object.keys(obj) as any;
 }
 
+class Test {
+  public constructor(target: React.Component) {
+    console.log('target', target.componentWillUnmount);
+    console.log('target', Object.getPrototypeOf(target));
+  }
+}
+
 @withSafeAreaDecorator
 export default class SafeAreaInsideScrollView extends React.Component<NavigationInjectedProps & SafeAreaInjectedProps> {
   public state = {
@@ -31,7 +38,19 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
       right: 0,
       bottom: 0,
     },
+    extraMargin: {
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
   };
+
+  public test = new Test(this);
+
+  public componentWillUnmount() {
+    console.log('SafeAreaInsideScrollView.componentWillUnmount');
+  }
 
   public render() {
     const types: SafeAreaView['props']['type'][] = ['react', 'native', 'disabled', 'simple', 'layout'];
@@ -39,7 +58,14 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
 
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}>
-        <ScrollView style={{ backgroundColor: 'red', flex: 1, margin: 5 }}>
+        <ScrollView style={{
+          backgroundColor: 'red',
+          flex: 1,
+          marginTop: this.state.extraMargin.top || 0,
+          marginLeft: this.state.extraMargin.left || 0,
+          marginRight: this.state.extraMargin.right || 0,
+          marginBottom: this.state.extraMargin.bottom || 0,
+        }}>
           <SafeAreaView
             style={{
               backgroundColor: 'purple',
@@ -105,7 +131,7 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
               {keysOf(this.state.padding).map((i) => (
                 <ListItem
                   key={i}
-                  title={i}
+                  title={'padding.' + i}
                   input={{
                     value: this.state.padding[i].toString(),
                     onChangeText: (value) => {
@@ -122,7 +148,7 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
               {keysOf(this.state.minPadding).map((i) => (
                 <ListItem
                   key={i}
-                  title={i}
+                  title={'minPadding.' + i}
                   input={{
                     value: this.state.minPadding[i].toString(),
                     onChangeText: (value) => {
@@ -133,6 +159,32 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
                   }}
                 />
               ))}
+
+              <View style={{ height: 20 }} />
+
+              {keysOf(this.state.extraMargin).map((i) => (
+                <ListItem
+                  key={i}
+                  title={'extraMargin.' + i}
+                  input={{
+                    value: this.state.extraMargin[i].toString(),
+                    onChangeText: (value) => {
+                      this.state.extraMargin[i] = parseFloat(value);
+                      this.forceUpdate();
+                    },
+                    keyboardType: 'numeric',
+                  }}
+                />
+              ))}
+
+              <View style={{ height: 20 }} />
+
+              <ListItem
+                onPress={() => {
+                  this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'Test' }));
+                }}
+                title="show Test"
+              />
 
             </View>
           </SafeAreaView>

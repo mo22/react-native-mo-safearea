@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, KeyboardAvoidingView } from 'react-native';
-import { NavigationInjectedProps, ScrollView } from 'react-navigation';
+import { NavigationInjectedProps, ScrollView, NavigationActions } from 'react-navigation';
 import { SafeAreaView, withSafeAreaDecorator, SafeAreaInjectedProps } from 'react-native-mo-safearea';
 import { ListItem } from 'react-native-elements';
 import Header from './Header';
@@ -97,7 +97,7 @@ export default class ScrollViewInsideSafeArea extends React.Component<Navigation
             {keysOf(this.state.padding).map((i) => (
               <ListItem
                 key={i}
-                title={i}
+                title={'padding.' + i}
                 input={{
                   value: this.state.padding[i].toString(),
                   onChangeText: (value) => {
@@ -114,7 +114,7 @@ export default class ScrollViewInsideSafeArea extends React.Component<Navigation
             {keysOf(this.state.minPadding).map((i) => (
               <ListItem
                 key={i}
-                title={i}
+                title={'minPadding.' + i}
                 input={{
                   value: this.state.minPadding[i].toString(),
                   onChangeText: (value) => {
@@ -125,6 +125,15 @@ export default class ScrollViewInsideSafeArea extends React.Component<Navigation
                 }}
               />
             ))}
+
+            <View style={{ height: 20 }} />
+
+            <ListItem
+              onPress={() => {
+                this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'Test' }));
+              }}
+              title="show Test"
+            />
 
           </ScrollView>
         </KeyboardAvoidingView>

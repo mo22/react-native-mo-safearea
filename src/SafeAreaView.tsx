@@ -118,10 +118,10 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
             console.log('SafeAreaView.native auto', auto);
 
             const insets = {
-              top: (bForceInsets.top === 'never') ? 0 : (bForceInsets.top === 'always') ? safeArea.top : auto.top,
-              left: (bForceInsets.left === 'never') ? 0 : (bForceInsets.left === 'always') ? safeArea.left : auto.left,
-              right: (bForceInsets.right === 'never') ? 0 : (bForceInsets.right === 'always') ? safeArea.right : auto.right,
-              bottom: (bForceInsets.bottom === 'never') ? 0 : (bForceInsets.bottom === 'always') ? safeArea.bottom : auto.bottom,
+              top: (bForceInsets.top === 'never') ? 0 : (bForceInsets.top === 'always') ? safeArea.top : Math.min(safeArea.top, auto.top),
+              left: (bForceInsets.left === 'never') ? 0 : (bForceInsets.left === 'always') ? safeArea.left : Math.min(safeArea.left, auto.left),
+              right: (bForceInsets.right === 'never') ? 0 : (bForceInsets.right === 'always') ? safeArea.right : Math.min(safeArea.right, auto.right),
+              bottom: (bForceInsets.bottom === 'never') ? 0 : (bForceInsets.bottom === 'always') ? safeArea.bottom : Math.min(safeArea.bottom, auto.bottom),
             };
             console.log('SafeAreaView.native insets', insets);
 
@@ -131,6 +131,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
                 pointerEvents="box-none"
                 ref={this.ref}
                 onLayout={(e: LayoutChangeEvent) => {
+                  console.log('SafeAreaView.native onLayout');
                   if (onLayout) onLayout(e);
                   if (this.ref.current) {
                     SafeArea.measureViewInsets(this.ref.current).then((r) => {
@@ -175,10 +176,10 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
             console.log('SafeAreaView.layout auto', auto);
 
             const insets = {
-              top: (bForceInsets.top === 'never') ? 0 : (bForceInsets.top === 'always') ? safeArea.top : auto.top,
-              left: (bForceInsets.left === 'never') ? 0 : (bForceInsets.left === 'always') ? safeArea.left : auto.left,
-              right: (bForceInsets.right === 'never') ? 0 : (bForceInsets.right === 'always') ? safeArea.right : auto.right,
-              bottom: (bForceInsets.bottom === 'never') ? 0 : (bForceInsets.bottom === 'always') ? safeArea.bottom : auto.bottom,
+              top: (bForceInsets.top === 'never') ? 0 : (bForceInsets.top === 'always') ? safeArea.top : Math.min(safeArea.top, auto.top),
+              left: (bForceInsets.left === 'never') ? 0 : (bForceInsets.left === 'always') ? safeArea.left : Math.min(safeArea.left, auto.left),
+              right: (bForceInsets.right === 'never') ? 0 : (bForceInsets.right === 'always') ? safeArea.right : Math.min(safeArea.right, auto.right),
+              bottom: (bForceInsets.bottom === 'never') ? 0 : (bForceInsets.bottom === 'always') ? safeArea.bottom : Math.min(safeArea.bottom, auto.bottom),
             };
             console.log('SafeAreaView.layout insets', insets);
 
@@ -187,6 +188,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
                 pointerEvents="box-none"
                 ref={this.ref}
                 onLayout={(e: LayoutChangeEvent) => {
+                  console.log('SafeAreaView.layout onLayout');
                   if (onLayout) onLayout(e);
                   if (this.ref.current) {
                     // this creates problems with move-in navigations.

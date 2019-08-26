@@ -23,6 +23,12 @@ const AppNavigator = createStackNavigator({
       header: null,
     },
   },
+  Test: {
+    screen: require('./Test').default,
+    navigationOptions: {
+      title: 'Test',
+    },
+  },
 });
 
 const AppContainer = createAppContainer(AppNavigator);
