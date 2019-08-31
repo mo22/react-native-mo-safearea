@@ -1,6 +1,7 @@
 import * as React from 'react';
 import './patchReactNavigationSafeAreaView';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const AppNavigator = createStackNavigator({
