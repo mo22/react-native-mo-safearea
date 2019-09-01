@@ -55,7 +55,7 @@ declare type ForBorders<T> = undefined | T | {
 export interface SafeAreaViewProps extends ViewProps {
     children?: React.ReactNode;
     /**
-     * the minimum padding for each border (includes padding and safaArea)
+     * the minimum safe area for each border
      */
     minPadding?: ForBorders<number>;
     /**
