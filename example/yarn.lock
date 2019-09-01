@@ -5344,6 +5344,13 @@ react-native-gesture-handler@^1.4.1:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
+react-native-mo-safearea@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-mo-safearea/-/react-native-mo-safearea-0.0.1.tgz#ad57f2f37eb6727e20d36dea54ef96c5ea4eeb4c"
+  integrity sha512-Op4AGX60Qb6SeMOu7OWY3J90/ogjpp5W03mz3IY8GhnCqpi5NBQYekiQOvpznbJOXce3D83ofmxBesCUsxcFOA==
+  dependencies:
+    rxjs "^6.5.2"
+
 react-native-ratings@^6.3.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/react-native-ratings/-/react-native-ratings-6.4.0.tgz#1923e445dbb4092eb880937ac4f7498b06815c3c"
@@ -5753,7 +5760,7 @@ rxjs@^5.4.3:
   dependencies:
     symbol-observable "1.0.1"
 
-rxjs@^6.4.0:
+rxjs@^6.4.0, rxjs@^6.5.2:
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.5.2.tgz#2e35ce815cd46d84d02a209fb4e5921e051dbec7"
   integrity sha512-HUb7j3kvb7p7eCUHE3FqjoDsC1xfZQ4AHFWfTKSpZ+sAhhz5X1WX0ZuUqWbzB2QhSLp3DoLUG+hMdEDKqWo2Zg==
