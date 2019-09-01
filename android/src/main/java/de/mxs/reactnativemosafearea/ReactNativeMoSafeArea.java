@@ -3,7 +3,6 @@ package de.mxs.reactnativemosafearea;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
 import android.view.WindowInsets;
@@ -136,11 +135,9 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
                     getReactApplicationContext().removeLifecycleEventListener(this);
                     getSafeAreaFromActivity(getCurrentActivity(), promise);
                 }
-
                 @Override
                 public void onHostPause() {
                 }
-
                 @Override
                 public void onHostDestroy() {
                 }

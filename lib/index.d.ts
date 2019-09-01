@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Insets, View, ViewProps, LayoutRectangle } from 'react-native';
+import { Insets, View, ViewProps } from 'react-native';
 import { StatefulEvent } from 'mo-core';
 import * as ios from './ios';
 import * as android from './android';
@@ -68,7 +68,6 @@ export interface SafeAreaViewProps extends ViewProps {
     forceInsets?: ForBorders<'always' | 'never' | 'auto'>;
 }
 export interface SafeAreaViewState {
-    layout?: LayoutRectangle;
     insets?: Required<Insets>;
 }
 /**
