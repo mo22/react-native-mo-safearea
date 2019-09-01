@@ -9,13 +9,6 @@ function keysOf<T extends {}>(obj: T): (keyof T)[] {
   return Object.keys(obj) as any;
 }
 
-class Test {
-  public constructor(target: React.Component) {
-    console.log('target', target.componentWillUnmount);
-    console.log('target', Object.getPrototypeOf(target));
-  }
-}
-
 @withSafeAreaDecorator
 export default class SafeAreaInsideScrollView extends React.Component<NavigationInjectedProps & SafeAreaInjectedProps> {
   public state = {
@@ -44,12 +37,6 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
       bottom: 0,
     },
   };
-
-  public test = new Test(this);
-
-  public componentWillUnmount() {
-    console.log('SafeAreaInsideScrollView.componentWillUnmount');
-  }
 
   public render() {
     const forceInsets: ('always'|'never'|'auto')[] = ['always', 'never', 'auto'];
