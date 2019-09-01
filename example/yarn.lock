@@ -684,9 +684,9 @@
   integrity sha512-1dVNHT76Uu5N3eJNTYcvxee+jzX4Z9lfciqRRHCU27ihbUcYi+iSc2iml5Ke1LXe1SyJCLA0+14Jh4tXJgOppA==
 
 "@hapi/hoek@8.x.x":
-  version "8.2.1"
-  resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-8.2.1.tgz#924af04cbb22e17359c620d2a9c946e63f58eb77"
-  integrity sha512-JPiBy+oSmsq3St7XlipfN5pNA6bDJ1kpa73PrK/zR29CVClDVqy04AanM/M/qx5bSF+I61DdCfAvRrujau+zRg==
+  version "8.2.2"
+  resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-8.2.2.tgz#6eaa2e1ec3b50dfb8dccbe705dc289094652bc2d"
+  integrity sha512-18P3VwngjNEcmvPj1mmiHLPyUPjhPAxIyJKDj4PRIY0F5ac3P0Vd0hkASPyWXHK0rfY3P9N2FoxV8ZuYaRBZ1g==
 
 "@hapi/joi@^15.0.3":
   version "15.1.1"
@@ -4586,11 +4586,6 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
-mo-core@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/mo-core/-/mo-core-0.1.1.tgz#bfb68a95ea1fead9c61b43b8a1500ce58708a5bd"
-  integrity sha512-n2zpOQjLlB3wZNLLroy75uWwD4XO4Qayxc1swXay4sgTSXJ/OXElG23KF/kolK2xE+o5XHcbwMMegxe+w0K+5Q==
-
 morgan@^1.9.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.9.1.tgz#0a8d16734a1d9afbc824b99df87e738e58e2da59"
@@ -5349,12 +5344,6 @@ react-native-gesture-handler@^1.4.1:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
-"react-native-mo-safearea@git+https://github.com/mo22/react-native-mo-safearea.git":
-  version "0.0.1"
-  resolved "git+https://github.com/mo22/react-native-mo-safearea.git#f4a3982975125d86a8e4bbd17eedc7ded9fba36d"
-  dependencies:
-    mo-core "^0.1.1"
-
 react-native-ratings@^6.3.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/react-native-ratings/-/react-native-ratings-6.4.0.tgz#1923e445dbb4092eb880937ac4f7498b06815c3c"
@@ -5926,9 +5915,9 @@ shell-quote@1.6.1:
     jsonify "~0.0.0"
 
 shell-quote@^1.6.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.7.1.tgz#3161d969886fb14f9140c65245a5dd19b6f0b06b"
-  integrity sha512-2kUqeAGnMAu6YrTPX4E3LfxacH9gKljzVjlkUeSqY0soGwK4KLl7TURXCem712tkhBCeeaFP9QK4dKn88s3Icg==
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.7.2.tgz#67a7d02c76c9da24f99d20808fcaded0e0e04be2"
+  integrity sha512-mRz/m/JVscCrkMyPqHc/bczi3OQHkLTqXHEFu0zDhK/qfv3UcOA4SVmRCLmos4bhjr9ekVQubj/R7waKapmiQg==
 
 shellwords@^0.1.1:
   version "0.1.1"
