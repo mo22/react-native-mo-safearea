@@ -2,7 +2,6 @@ import * as React from 'react';
 import './patchReactNavigationSafeAreaView';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import AsyncStorage from '@react-native-community/async-storage';
 
 const AppNavigator = createStackNavigator({
   Menu: {
@@ -37,22 +36,7 @@ const AppContainer = createAppContainer(AppNavigator);
 class App extends React.PureComponent<{}> {
   public render() {
     return (
-      <AppContainer
-        persistNavigationState={async (navState) => {
-          try {
-            await AsyncStorage.setItem('navState', JSON.stringify(navState));
-          } catch (e) {
-          }
-        }}
-        loadNavigationState={async () => {
-          if (1) return null;
-          try {
-            return JSON.parse(await AsyncStorage.getItem('navState') || 'null');
-          } catch (e) {
-            return null;
-          }
-        }}
-      />
+      <AppContainer />
     );
   }
 }
