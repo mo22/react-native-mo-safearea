@@ -29,13 +29,9 @@ return (
 );
 
 return (
-  <SafeAreaView forceInsets={{ top: 'always', horizontal: 'always', bottom: 'never' }}>
+  <SafeAreaView forceInsets={{ top: 'always', horizontal: 'always', bottom: 'auto' }}>
     <Content />
   </SafeAreaView>
 );
 
 ```
-
-## TODO
-
-- [ ] SafeAreaView ios - auto insets. need location of view in screen. scrollviews?

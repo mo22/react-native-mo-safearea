@@ -260,7 +260,6 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
           const { style, onLayout, ...otherProps } = props;
           const flatStyle = StyleSheet.flatten(style || {});
           const screen = Dimensions.get('screen');
-
           // console.log('SafeArea safeArea', safeArea);
           // console.log('SafeArea screen', screen);
           // console.log('SafeArea bMinPadding', bMinPadding);
@@ -272,20 +271,17 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
             right: safeArea.right,
             bottom: safeArea.bottom,
           };
-
           if (this.state.insets) {
             if (bForceInsets.top === 'auto') insets.top = Math.max(0, Math.min(safeArea.top, safeArea.top - this.state.insets.top));
             if (bForceInsets.left === 'auto') insets.left = Math.max(0, Math.min(safeArea.left, safeArea.left - this.state.insets.left));
             if (bForceInsets.right === 'auto') insets.right = Math.max(0, Math.min(safeArea.right, safeArea.right - this.state.insets.right));
             if (bForceInsets.bottom === 'auto') insets.bottom = Math.max(0, Math.min(safeArea.bottom, safeArea.bottom - this.state.insets.bottom));
           }
-
           if (bForceInsets.top === 'never') insets.top = 0;
           if (bForceInsets.left === 'never') insets.left = 0;
           if (bForceInsets.right === 'never') insets.right = 0;
           if (bForceInsets.bottom === 'never') insets.bottom = 0;
-
-          console.log('SafeArea insets', insets);
+          // console.log('SafeArea insets', insets);
 
           const padding = {
             top: Math.max(insets.top, bMinPadding.top) + bPadding.top,
@@ -293,8 +289,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
             right: Math.max(insets.right, bMinPadding.right) + bPadding.right,
             bottom: Math.max(insets.bottom, bMinPadding.bottom) + bPadding.bottom,
           };
-
-          console.log('SafeArea padding', padding);
+          // console.log('SafeArea padding', padding);
 
           return (
             <View
