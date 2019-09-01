@@ -15,7 +15,7 @@ export declare class SafeArea {
     /**
      * stateful event that provides the current safe area insets
      */
-    static readonly safeArea: StatefulEvent<Required<Insets>>;
+    static readonly safeArea: StatefulEvent<Readonly<Required<Insets>>>;
     /**
      * measure the native distance of a view to all screen borders, taking
      * scrollviews and such into account.
@@ -32,7 +32,7 @@ export declare class SafeAreaConsumer extends React.PureComponent<{
     value: Insets;
 }> {
     state: {
-        value: Required<Insets>;
+        value: Readonly<Required<Insets>>;
     };
     private subscription?;
     componentDidMount(): void;

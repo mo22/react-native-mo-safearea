@@ -37,3 +37,5 @@ return (
 ```
 
 ## TODO
+
+- [ ] SafeAreaView ios - auto insets. need location of view in screen. scrollviews?

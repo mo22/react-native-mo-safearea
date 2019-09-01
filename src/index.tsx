@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Insets, View, findNodeHandle, ViewProps, LayoutRectangle, StyleSheet, Dimensions, LayoutChangeEvent } from 'react-native';
+import { Insets, View, findNodeHandle, ViewProps, LayoutRectangle, StyleSheet, Dimensions, LayoutChangeEvent, InteractionManager } from 'react-native';
 import { StatefulEvent, Releaseable } from 'mo-core';
 import * as ios from './ios';
 import * as android from './android';
@@ -20,7 +20,7 @@ export class SafeArea {
   /**
    * stateful event that provides the current safe area insets
    */
-  public static readonly safeArea = new StatefulEvent<Required<Insets>>(
+  public static readonly safeArea = new StatefulEvent<Readonly<Required<Insets>>>(
     (() => {
       if (ios.Module && ios.Module.initialSafeArea) {
         return ios.Module.initialSafeArea;
@@ -247,22 +247,40 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
     const bMinPadding = fromBorders(minPadding, 0);
     const bPadding = fromBorders(padding, 0);
     const bForceInsets = fromBorders(forceInsets, 'auto');
-    // const needAuto = (bForceInsets.top === 'auto') || (bForceInsets.left === 'auto') || (bForceInsets.right === 'auto') || (bForceInsets.bottom === 'auto');
+    const needAuto = (bForceInsets.top === 'auto') || (bForceInsets.left === 'auto') || (bForceInsets.right === 'auto') || (bForceInsets.bottom === 'auto');
 
     return (
       <SafeAreaConsumer>
         {(safeArea) => {
+          safeArea = JSON.parse(JSON.stringify(safeArea)); // ?!?!!
           const { style, onLayout, ...otherProps } = props;
           const flatStyle = StyleSheet.flatten(style || {});
           const screen = Dimensions.get('screen');
 
-          // adjust safeArea to what is actually needed here...
+          console.log('SafeArea screen', screen);
+          console.log('SafeArea safeArea', safeArea);
+          console.log('SafeArea bMinPadding', bMinPadding);
+          console.log('SafeArea bPadding', bPadding);
+
+          if (this.state.insets) {
+            if (bForceInsets.top === 'auto') safeArea.top = Math.max(0, Math.min(safeArea.top, safeArea.top - this.state.insets.top));
+            if (bForceInsets.left === 'auto') safeArea.left = Math.max(0, Math.min(safeArea.left, safeArea.left - this.state.insets.left));
+            if (bForceInsets.right === 'auto') safeArea.right = Math.max(0, Math.min(safeArea.right, safeArea.right - this.state.insets.right));
+            if (bForceInsets.bottom === 'auto') safeArea.bottom = Math.max(0, Math.min(safeArea.bottom, safeArea.bottom - this.state.insets.bottom));
+          }
+
+          if (bForceInsets.top === 'never') safeArea.top = 0;
+          if (bForceInsets.left === 'never') safeArea.left = 0;
+          if (bForceInsets.right === 'never') safeArea.right = 0;
+          if (bForceInsets.bottom === 'never') safeArea.bottom = 0;
+
+          console.log('SafeArea safeArea adjusted', safeArea);
 
           const padding = {
-            top: Math.max((bForceInsets.top === 'always') ? safeArea.top : 0, bMinPadding.top) + bPadding.top,
-            left: Math.max((bForceInsets.left === 'always') ? safeArea.left : 0, bMinPadding.left) + bPadding.left,
-            right: Math.max((bForceInsets.right === 'always') ? safeArea.right : 0, bMinPadding.right) + bPadding.right,
-            bottom: Math.max((bForceInsets.bottom === 'always') ? safeArea.bottom : 0, bMinPadding.bottom) + bPadding.bottom,
+            top: Math.max(safeArea.top, bMinPadding.top) + bPadding.top,
+            left: Math.max(safeArea.left, bMinPadding.left) + bPadding.left,
+            right: Math.max(safeArea.right, bMinPadding.right) + bPadding.right,
+            bottom: Math.max(safeArea.bottom, bMinPadding.bottom) + bPadding.bottom,
           };
 
           console.log('SafeArea padding', padding);
@@ -274,26 +292,51 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
               onLayout={(e: LayoutChangeEvent) => {
                 console.log('SafeAreaView onLayout');
                 if (onLayout) onLayout(e);
-                if (this.ref.current) {
+                if (needAuto && this.ref.current) {
+
                   SafeArea.measureViewInsets(this.ref.current).then((r) => {
-                    // @TODO: get x/y coordinate for pagination?
                     console.log('SafeAreaView measureNative', r);
+                    if (!r) return;
+
+                    r.right = r.right % screen.width;
+                    r.left = r.left % screen.width;
+                    r.top = r.top % screen.height;
+                    r.bottom = r.bottom % screen.height;
+
+                    console.log('SafeAreaView measureNative wrapped', r);
+
                     this.setState({ insets: r });
                   });
 
-                  // const view = (this.ref.current as any).getNode() as View;
-                  this.ref.current.measureInWindow((x, y, width, height) => {
-                    console.log('SafeAreaView.layout measured', x, y, width, height);
+                  // InteractionManager.runAfterInteractions(() => {
+                  //   if (this.ref.current) {
+                  //     SafeArea.measureViewInsets(this.ref.current).then((r) => {
+                  //       console.log('SafeAreaView measureNative after', r);
+                  //     });
+                  //   }
+                  // });
 
-                    // for slide-in navigations?
-                    if (x >= screen.width) x = x % screen.width;
-                    if (x < 0) x = (x % screen.width) + screen.width;
-                    if (y >= screen.height) y = y % screen.height;
-                    if (y < 0) y = (y % screen.height) + screen.height;
+                  // setTimeout(() => {
+                  //   if (this.ref.current) {
+                  //     SafeArea.measureViewInsets(this.ref.current).then((r) => {
+                  //       console.log('SafeAreaView measureNative timeout', r);
+                  //     });
+                  //   }
+                  // }, 1000);
 
-                    console.log('SafeAreaView.layout measured2', x, y, width, height);
-
-                  });
+                  // // const view = (this.ref.current as any).getNode() as View;
+                  // this.ref.current.measureInWindow((x, y, width, height) => {
+                  //   console.log('SafeAreaView.layout measured', x, y, width, height);
+                  //
+                  //   // for slide-in navigations?
+                  //   if (x >= screen.width) x = x % screen.width;
+                  //   if (x < 0) x = (x % screen.width) + screen.width;
+                  //   if (y >= screen.height) y = y % screen.height;
+                  //   if (y < 0) y = (y % screen.height) + screen.height;
+                  //
+                  //   console.log('SafeAreaView.layout measured2', x, y, width, height);
+                  //
+                  // });
 
                 }
               }}
