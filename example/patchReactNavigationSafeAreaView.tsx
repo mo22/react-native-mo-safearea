@@ -7,7 +7,7 @@ SafeAreaViewOrig.prototype.render = function render() {
   const props = this.props as SafeAreaViewOrigProps;
   const { forceInset, ...otherProps } = props;
   return (
-    <SafeAreaView type="simple" forceInsets={forceInset}>
+    <SafeAreaView forceInsets={forceInset}>
       <View {...otherProps} />
     </SafeAreaView>
   );

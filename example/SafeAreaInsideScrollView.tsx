@@ -19,7 +19,6 @@ class Test {
 @withSafeAreaDecorator
 export default class SafeAreaInsideScrollView extends React.Component<NavigationInjectedProps & SafeAreaInjectedProps> {
   public state = {
-    type: 'layout' as SafeAreaView['props']['type'],
     forceInsets: {
       top: 'auto' as 'always'|'never'|'auto',
       left: 'auto' as 'always'|'never'|'auto',
@@ -53,7 +52,6 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
   }
 
   public render() {
-    const types: SafeAreaView['props']['type'][] = ['react', 'native', 'disabled', 'simple', 'layout'];
     const forceInsets: ('always'|'never'|'auto')[] = ['always', 'never', 'auto'];
 
     return (
@@ -74,7 +72,6 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
             minPadding={this.state.minPadding}
             padding={this.state.padding}
             forceInsets={this.state.forceInsets}
-            type={this.state.type}
           >
             <View style={{ backgroundColor: 'white' }}>
               <Header />
@@ -95,19 +92,6 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
                   rightTitle={this.props.safeArea[i].toString()}
                 />
               ))}
-
-              <View style={{ height: 20 }} />
-
-              <ListItem
-                title="type"
-                buttonGroup={{
-                  selectedIndex: types.indexOf(this.state.type),
-                  buttons: types as string[],
-                  onPress: (selectedIndex) => {
-                    this.setState({ type: types[selectedIndex] });
-                  },
-                }}
-              />
 
               <View style={{ height: 20 }} />
 

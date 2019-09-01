@@ -264,6 +264,9 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
             right: Math.max((bForceInsets.right === 'always') ? safeArea.right : 0, bMinPadding.right) + bPadding.right,
             bottom: Math.max((bForceInsets.bottom === 'always') ? safeArea.bottom : 0, bMinPadding.bottom) + bPadding.bottom,
           };
+
+          console.log('SafeArea padding', padding);
+
           return (
             <View
               pointerEvents="box-none"
