@@ -15,7 +15,6 @@ public final class ReactNativeMoSafeAreaPackage implements ReactPackage {
     @Override
     public @Nonnull List<ViewManager> createViewManagers(@Nonnull ReactApplicationContext reactContext) {
         List<ViewManager> viewManagers = new ArrayList<>();
-        viewManagers.add(new ReactNativeMoSafeAreaViewManager());
         return viewManagers;
     }
 
