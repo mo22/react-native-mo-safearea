@@ -4,6 +4,7 @@
 
 @interface ReactNativeMoSafeArea : RCTEventEmitter {
     UIView* _referenceView;
+    BOOL _verbose;
 }
 @end
 
@@ -37,6 +38,10 @@ RCT_EXPORT_MODULE()
     return constants;
 }
 
+RCT_EXPORT_METHOD(setVerbose:(BOOL)verbose) {
+    _verbose = verbose;
+}
+
 RCT_EXPORT_METHOD(getSafeArea:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     if (@available(iOS 11.0, *)) {
         UIEdgeInsets insets = UIApplication.sharedApplication.keyWindow.safeAreaInsets;
@@ -55,7 +60,7 @@ RCT_EXPORT_METHOD(getSafeArea:(RCTPromiseResolveBlock)resolve reject:(RCTPromise
     if ([keyPath isEqualToString:@"safeAreaInsets"]) {
         if (@available(iOS 11.0, *)) {
             UIEdgeInsets insets = UIApplication.sharedApplication.keyWindow.safeAreaInsets;
-//            NSLog(@"ReactNativeMoSafeArea.observeValueForKeyPath new insets %@", NSStringFromUIEdgeInsets(insets));
+            if (_verbose) NSLog(@"ReactNativeMoSafeArea.observeValueForKeyPath new insets %@", NSStringFromUIEdgeInsets(insets));
             [self sendEventWithName:@"ReactNativeMoSafeArea" body:@{
                 @"safeArea": @{
                     @"top": @(insets.top),
@@ -74,11 +79,11 @@ RCT_EXPORT_METHOD(enableSafeAreaEvent:(BOOL)enable) {
             [self->_referenceView removeObserver:self forKeyPath:@"safeAreaInsets"];
         }
         self->_referenceView = RCTSharedApplication().keyWindow.rootViewController.view;
-//        NSLog(@"ReactNativeMoSafeArea.enableSafeAreaEvent enable view %@", self->_referenceView);
+        if (_verbose) NSLog(@"ReactNativeMoSafeArea.enableSafeAreaEvent enable view %@", self->_referenceView);
         [self->_referenceView addObserver:self forKeyPath:@"safeAreaInsets" options:NSKeyValueObservingOptionNew context:nil];
     } else {
         if (_referenceView) {
-//            NSLog(@"ReactNativeMoSafeArea.enableSafeAreaEvent disable");
+            if (_verbose) NSLog(@"ReactNativeMoSafeArea.enableSafeAreaEvent disable");
             [self->_referenceView removeObserver:self forKeyPath:@"safeAreaInsets"];
             self->_referenceView = nil;
         }
