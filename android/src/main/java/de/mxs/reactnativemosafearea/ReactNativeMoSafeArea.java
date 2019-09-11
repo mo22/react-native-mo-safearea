@@ -3,6 +3,7 @@ package de.mxs.reactnativemosafearea;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
 import android.view.WindowInsets;
@@ -25,6 +26,8 @@ import javax.annotation.Nonnull;
 public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
 
     private View windowInsetView;
+
+    private boolean verbose = false;
 
     ReactNativeMoSafeArea(@Nonnull ReactApplicationContext reactContext) {
         super(reactContext);
@@ -66,9 +69,16 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
         });
     }
 
+    @SuppressWarnings("unused")
+    @ReactMethod
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
+    }
+
     @SuppressWarnings({"unused", "WeakerAccess"})
     @ReactMethod
     public void enableSafeAreaEvent(boolean enable) {
+        if (verbose) Log.i("ReactNativeMoSafeArea", "enableSafeAreaEvent " + enable);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!enable) {
                 if (windowInsetView != null) {
@@ -79,6 +89,7 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
             if (enable) {
                 final Activity activity = getCurrentActivity();
                 if (activity == null) {
+                    if (verbose) Log.i("ReactNativeMoSafeArea", "enableSafeAreaEvent wait for activity");
                     getReactApplicationContext().addLifecycleEventListener(new LifecycleEventListener() {
                         @Override
                         public void onHostResume() {
