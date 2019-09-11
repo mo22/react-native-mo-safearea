@@ -18,6 +18,17 @@ export class SafeArea {
   public static readonly android = android;
 
   /**
+   * be verbose
+   */
+  public static setVerbose(verbose: boolean) {
+    if (ios.Module) {
+      ios.Module.setVerbose(verbose);
+    } else if (android.Module) {
+      android.Module.setVerbose(verbose);
+    }
+  }
+
+  /**
    * stateful event that provides the current safe area insets
    */
   public static readonly safeArea = new StatefulEvent<Readonly<Required<Insets>>>(
@@ -27,7 +38,7 @@ export class SafeArea {
       }
       if (android.Module) {
         android.Module.getSafeArea().then((val) => {
-          if (val) SafeArea.safeArea.value = val;
+          if (val) SafeArea.safeArea.UNSAFE_setValue(val);
         });
       }
       return { top: 0, left: 0, bottom: 0, right: 0 };

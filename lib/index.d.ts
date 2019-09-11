@@ -13,6 +13,10 @@ export declare class SafeArea {
      */
     static readonly android: typeof android;
     /**
+     * be verbose
+     */
+    static setVerbose(verbose: boolean): void;
+    /**
      * stateful event that provides the current safe area insets
      */
     static readonly safeArea: StatefulEvent<Readonly<Required<Insets>>>;
