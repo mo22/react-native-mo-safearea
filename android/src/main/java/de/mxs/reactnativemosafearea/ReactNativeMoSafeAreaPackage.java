@@ -6,6 +6,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -14,8 +15,7 @@ public final class ReactNativeMoSafeAreaPackage implements ReactPackage {
 
     @Override
     public @Nonnull List<ViewManager> createViewManagers(@Nonnull ReactApplicationContext reactContext) {
-        List<ViewManager> viewManagers = new ArrayList<>();
-        return viewManagers;
+        return Collections.emptyList();
     }
 
     @Override
