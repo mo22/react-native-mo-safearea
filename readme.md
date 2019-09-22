@@ -1,5 +1,8 @@
 # react-native-mo-safearea
 
+## Installation
+Install just like your ordinary react-native module.
+
 ## Reason
 
 Some areas of the screen are not freely usable:
@@ -10,7 +13,7 @@ This module provides the dimensions of those areas and a view that adds padding 
 
 ## Usage
 
-see example/ project for examples.
+Please check the [example/](example/) code.
 
 ```ts
 import { SafeArea } from 'react-native-mo-safearea';
