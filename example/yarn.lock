@@ -5356,10 +5356,10 @@ react-native-gesture-handler@^1.4.1:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
-react-native-mo-safearea@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/react-native-mo-safearea/-/react-native-mo-safearea-0.1.4.tgz#4c81033a511879d09090069c6da1ad4a370e0c65"
-  integrity sha512-7jDx0ojWJhM/zDTAy5uGLk08WmYhbIjSzKgoO0CdaXtcFUI6BGQnEQzaggySaG38NPLlg2VLavAZJsftbQEpNw==
+react-native-mo-safearea@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-mo-safearea/-/react-native-mo-safearea-0.1.5.tgz#b736f9bde715e43f5eb682ab2ee52909e0d013c1"
+  integrity sha512-px+IpuEHFPvW3pVxEVai8Da+qZfru1t4ritQUqY/rRMtI8HRHINfG9SKVXDYAwQUf/wM7Sjr4pq1h/QJZrepJA==
   dependencies:
     mo-core "^0.1.3"
 

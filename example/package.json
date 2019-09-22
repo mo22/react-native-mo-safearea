@@ -15,7 +15,7 @@
     "react-native": "0.60.5",
     "react-native-elements": "^1.2.1",
     "react-native-gesture-handler": "^1.4.1",
-    "react-native-mo-safearea": "^0.1.4",
+    "react-native-mo-safearea": "^0.1.5",
     "react-native-safe-area-view": "^0.14.8",
     "react-native-screens": "^2.0.0-alpha.3",
     "react-native-vector-icons": "^6.6.0",
