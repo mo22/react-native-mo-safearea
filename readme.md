@@ -21,6 +21,10 @@ res/values/styles.xml
     </style>
 ```
 
+## Working with react-navigation
+
+see example/patchReactNavigationSafeAreaView.tsx
+
 ## Usage
 
 Please check the [example/](example/) code.
