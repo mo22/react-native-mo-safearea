@@ -11,6 +11,16 @@ Some areas of the screen are not freely usable:
 
 This module provides the dimensions of those areas and a view that adds padding to avoid these areas.
 
+## Fullscreen mode in Android
+
+res/values/styles.xml
+```
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+```
+
 ## Usage
 
 Please check the [example/](example/) code.
