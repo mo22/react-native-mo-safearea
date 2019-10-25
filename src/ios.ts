@@ -11,8 +11,8 @@ export interface Module {
 export interface SafeAreaEvent {
   safeArea?: Required<Insets>;
   keyboardArea?: {
-    start: { x: number; y: number; width: number; height: number; visible: boolean; };
-    end: { x: number; y: number; width: number; height: number; visible: boolean; };
+    start: { x: number; y: number; width: number; height: number; };
+    end: { x: number; y: number; width: number; height: number; };
     duration: number;
   };
 }

@@ -84,9 +84,7 @@ RCT_EXPORT_METHOD(enableSafeAreaEvent:(BOOL)enable) {
         self->_referenceView = RCTSharedApplication().keyWindow.rootViewController.view;
         if (_verbose) NSLog(@"ReactNativeMoSafeArea.enableSafeAreaEvent enable view %@", self->_referenceView);
         [self->_referenceView addObserver:self forKeyPath:@"safeAreaInsets" options:NSKeyValueObservingOptionNew context:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardNotification:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardNotification:) name:UIKeyboardWillChangeFrameNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardNotification:) name:UIKeyboardWillHideNotification object:nil];
     } else {
         if (_referenceView) {
             if (_verbose) NSLog(@"ReactNativeMoSafeArea.enableSafeAreaEvent disable");
@@ -162,14 +160,12 @@ RCT_EXPORT_METHOD(measureViewInsets:(nonnull NSNumber*)node resolve:(RCTPromiseR
                     @"y": @([notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue].origin.y),
                     @"width": @([notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size.width),
                     @"height": @([notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size.height),
-                    @"visible": @([notification.name isEqualToString:UIKeyboardWillShowNotification] ? false : true),
                 },
                 @"end": @{
                     @"x": @([notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].origin.x),
                     @"y": @([notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].origin.y),
                     @"width": @([notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.width),
                     @"height": @([notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height),
-                    @"visible": @([notification.name isEqualToString:UIKeyboardWillHideNotification] ? false : true),
                 },
                 @"duration": @([notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue] * 1000),
             },

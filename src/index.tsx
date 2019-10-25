@@ -61,17 +61,29 @@ export class SafeArea {
     })(),
     (emit) => {
       const partialEmit = (value: Partial<SafeAreaInfo>) => {
+        console.log('partialEmit oldValue', SafeArea.safeArea.value);
+        console.log('partialEmit value', value);
         const newValue = { ...SafeArea.safeArea.value, ...value };
+        console.log('partialEmit newValue', newValue);
         if (JSON.stringify(newValue) === JSON.stringify(SafeArea.safeArea.value)) return;
         emit(newValue);
       };
       if (ios.Events && ios.Module) {
         const sub = ios.Events.addListener('ReactNativeMoSafeArea', (rs) => {
-          partialEmit({
-            safeArea: rs.safeArea,
-          });
+          if (rs.safeArea !== undefined) {
+            partialEmit({
+              safeArea: rs.safeArea,
+            });
+          }
           if (rs.keyboardArea !== undefined) {
             console.log('ReactNativeMoSafeArea convert keyboard area', rs);
+            console.log('screen', Dimensions.get('screen'));
+            // height stays constant !
+
+            // { duration: 250,
+            //   end: { y: 407, visible: 1, x: 0, height: 260, width: 375 },
+            //   start: { y: 667, visible: 1, x: 0, height: 260, width: 375 } } }
+
             partialEmit({
               system: {
                 top: 0,
@@ -319,10 +331,11 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
           const { style, onLayout, ...otherProps } = props;
           const flatStyle = StyleSheet.flatten(style || {});
           const screen = Dimensions.get('screen');
-          // console.log('SafeArea safeArea', safeArea);
-          // console.log('SafeArea screen', screen);
-          // console.log('SafeArea bMinPadding', bMinPadding);
-          // console.log('SafeArea bPadding', bPadding);
+          console.log('SafeArea safeArea', safeAreaInfo.safeArea);
+          console.log('SafeArea system', safeAreaInfo.system);
+          console.log('SafeArea screen', screen);
+          console.log('SafeArea bMinPadding', bMinPadding);
+          console.log('SafeArea bPadding', bPadding);
           const safeArea = { ...safeAreaInfo.safeArea };
 
           // system windows? - not always.
