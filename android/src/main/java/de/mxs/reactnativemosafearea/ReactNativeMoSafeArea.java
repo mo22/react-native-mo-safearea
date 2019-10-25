@@ -17,6 +17,7 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.uimanager.UIManagerModule;
@@ -53,18 +54,48 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
         }
         windowInsetView = activity.findViewById(android.R.id.content);
         windowInsetView.setOnApplyWindowInsetsListener((v, insets) -> {
-            WritableMap args = Arguments.createMap();
+            Log.i("XXX", "insets changed " + insets);
             final WindowInsets insets2 = activity.getWindow().getDecorView().getRootWindowInsets();
+            Log.i("XXX", "insets changed insets2 " + insets2);
             final float density = activity.getResources().getDisplayMetrics().density;
-            if (insets2 != null) {
+            WritableMap args = Arguments.createMap();
+            {
                 WritableMap args2 = Arguments.createMap();
-                args2.putDouble("top", (1.0 / density) * insets2.getStableInsetTop());
-                args2.putDouble("left", (1.0 / density) * insets2.getStableInsetLeft());
-                args2.putDouble("bottom", (1.0 / density) * insets2.getStableInsetBottom());
-                args2.putDouble("right", (1.0 / density) * insets2.getStableInsetRight());
+                args2.putDouble("top", (1.0 / density) * insets.getStableInsetTop());
+                args2.putDouble("left", (1.0 / density) * insets.getStableInsetLeft());
+                args2.putDouble("bottom", (1.0 / density) * insets.getStableInsetBottom());
+                args2.putDouble("right", (1.0 / density) * insets.getStableInsetRight());
                 args.putMap("safeArea", args2);
-                getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("ReactNativeMoSafeArea", args);
             }
+            {
+                WritableMap rs = Arguments.createMap();
+                rs.putDouble("top", (1.0 / density) * insets.getStableInsetTop());
+                rs.putDouble("left", (1.0 / density) * insets.getStableInsetLeft());
+                rs.putDouble("bottom", (1.0 / density) * insets.getStableInsetBottom());
+                rs.putDouble("right", (1.0 / density) * insets.getStableInsetRight());
+                args.putMap("stableInsets", rs);
+            }
+            {
+                WritableMap rs = Arguments.createMap();
+                rs.putDouble("top", (1.0 / density) * insets.getSystemWindowInsetTop());
+                rs.putDouble("left", (1.0 / density) * insets.getSystemWindowInsetLeft());
+                rs.putDouble("bottom", (1.0 / density) * insets.getSystemWindowInsetBottom());
+                rs.putDouble("right", (1.0 / density) * insets.getSystemWindowInsetRight());
+                args.putMap("systemWindowInsets", rs);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                WritableArray list = Arguments.createArray();
+                for (Rect cutout : insets.getDisplayCutout().getBoundingRects()) {
+                    WritableMap rs = Arguments.createMap();
+                    rs.putDouble("top", (1.0 / density) * cutout.top);
+                    rs.putDouble("left", (1.0 / density) * cutout.left);
+                    rs.putDouble("bottom", (1.0 / density) * cutout.bottom);
+                    rs.putDouble("right", (1.0 / density) * cutout.right);
+                    list.pushMap(rs);
+                }
+                args.putArray("displayCutouts", list);
+            }
+            getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("ReactNativeMoSafeArea", args);
             return v.onApplyWindowInsets(insets);
         });
     }
@@ -78,6 +109,7 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
     @SuppressWarnings({"unused", "WeakerAccess"})
     @ReactMethod
     public void enableSafeAreaEvent(boolean enable) {
+        Log.i("ReactNativeMoSafeArea", "enableSafeAreaEvent " + enable);
         if (verbose) Log.i("ReactNativeMoSafeArea", "enableSafeAreaEvent " + enable);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!enable) {
