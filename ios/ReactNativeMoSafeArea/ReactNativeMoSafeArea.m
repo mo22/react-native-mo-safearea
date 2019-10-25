@@ -155,6 +155,23 @@ RCT_EXPORT_METHOD(measureViewInsets:(nonnull NSNumber*)node resolve:(RCTPromiseR
 - (void)handleKeyboardNotification:(NSNotification *)notification {
     if (_verbose) NSLog(@"ReactNativeMoSafeArea.handleKeyboardNotification %@", notification);
     if (self.bridge) {
+        [self sendEventWithName:@"ReactNativeMoSafeArea" body:@{
+            @"keyboardArea": @{
+                @"start": @{
+                    @"x": @([notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue].origin.x),
+                    @"y": @([notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue].origin.y),
+                    @"width": @([notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size.width),
+                    @"height": @([notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size.height),
+                },
+                @"end": @{
+                    @"x": @([notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].origin.x),
+                    @"y": @([notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].origin.y),
+                    @"width": @([notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.width),
+                    @"height": @([notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height),
+                },
+                @"duration": @([notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue] * 1000),
+            },
+        }];
     }
 }
 
