@@ -46,6 +46,42 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
         super.onCatalystInstanceDestroy();
     }
 
+    private WritableMap convertInsetsToArgs(WindowInsets insets) {
+        final float density = getReactApplicationContext().getResources().getDisplayMetrics().density;
+        WritableMap args = Arguments.createMap();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            WritableMap rs = Arguments.createMap();
+            rs.putDouble("top", (1.0 / density) * insets.getStableInsetTop());
+            rs.putDouble("left", (1.0 / density) * insets.getStableInsetLeft());
+            rs.putDouble("bottom", (1.0 / density) * insets.getStableInsetBottom());
+            rs.putDouble("right", (1.0 / density) * insets.getStableInsetRight());
+            args.putMap("stableInsets", rs);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            WritableMap rs = Arguments.createMap();
+            rs.putDouble("top", (1.0 / density) * insets.getSystemWindowInsetTop());
+            rs.putDouble("left", (1.0 / density) * insets.getSystemWindowInsetLeft());
+            rs.putDouble("bottom", (1.0 / density) * insets.getSystemWindowInsetBottom());
+            rs.putDouble("right", (1.0 / density) * insets.getSystemWindowInsetRight());
+            args.putMap("systemWindowInsets", rs);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            WritableArray list = Arguments.createArray();
+            if (insets.getDisplayCutout() != null) {
+                for (Rect cutout : insets.getDisplayCutout().getBoundingRects()) {
+                    WritableMap rs = Arguments.createMap();
+                    rs.putDouble("top", (1.0 / density) * cutout.top);
+                    rs.putDouble("left", (1.0 / density) * cutout.left);
+                    rs.putDouble("bottom", (1.0 / density) * cutout.bottom);
+                    rs.putDouble("right", (1.0 / density) * cutout.right);
+                    list.pushMap(rs);
+                }
+            }
+            args.putArray("displayCutouts", list);
+        }
+        return args;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void startWatchingWindowInsets(final Activity activity) {
         if (windowInsetView != null) {
@@ -57,38 +93,7 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
             if (verbose) Log.i("ReactNativeMoSafeArea", "insets changed " + insets);
             final WindowInsets insets2 = activity.getWindow().getDecorView().getRootWindowInsets();
             if (verbose) Log.i("ReactNativeMoSafeArea", "insets2 " + insets2);
-            final float density = activity.getResources().getDisplayMetrics().density;
-            WritableMap args = Arguments.createMap();
-            {
-                WritableMap rs = Arguments.createMap();
-                rs.putDouble("top", (1.0 / density) * insets.getStableInsetTop());
-                rs.putDouble("left", (1.0 / density) * insets.getStableInsetLeft());
-                rs.putDouble("bottom", (1.0 / density) * insets.getStableInsetBottom());
-                rs.putDouble("right", (1.0 / density) * insets.getStableInsetRight());
-                args.putMap("stableInsets", rs);
-            }
-            {
-                WritableMap rs = Arguments.createMap();
-                rs.putDouble("top", (1.0 / density) * insets.getSystemWindowInsetTop());
-                rs.putDouble("left", (1.0 / density) * insets.getSystemWindowInsetLeft());
-                rs.putDouble("bottom", (1.0 / density) * insets.getSystemWindowInsetBottom());
-                rs.putDouble("right", (1.0 / density) * insets.getSystemWindowInsetRight());
-                args.putMap("systemWindowInsets", rs);
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                WritableArray list = Arguments.createArray();
-                if (insets.getDisplayCutout() != null) {
-                    for (Rect cutout : insets.getDisplayCutout().getBoundingRects()) {
-                        WritableMap rs = Arguments.createMap();
-                        rs.putDouble("top", (1.0 / density) * cutout.top);
-                        rs.putDouble("left", (1.0 / density) * cutout.left);
-                        rs.putDouble("bottom", (1.0 / density) * cutout.bottom);
-                        rs.putDouble("right", (1.0 / density) * cutout.right);
-                        list.pushMap(rs);
-                    }
-                }
-                args.putArray("displayCutouts", list);
-            }
+            WritableMap args = convertInsetsToArgs(insets);
             getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("ReactNativeMoSafeArea", args);
             return v.onApplyWindowInsets(insets);
         });
@@ -146,12 +151,7 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             final WindowInsets insets = view.getRootWindowInsets();
             if (insets != null) {
-                final float density = getReactApplicationContext().getResources().getDisplayMetrics().density;
-                WritableMap args = Arguments.createMap();
-                args.putDouble("top", (1.0 / density) * insets.getStableInsetTop());
-                args.putDouble("left", (1.0 / density) * insets.getStableInsetLeft());
-                args.putDouble("bottom", (1.0 / density) * insets.getStableInsetBottom());
-                args.putDouble("right", (1.0 / density) * insets.getStableInsetRight());
+                WritableMap args = convertInsetsToArgs(insets);
                 promise.resolve(args);
             } else {
                 promise.resolve(null);

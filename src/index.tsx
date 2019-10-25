@@ -6,6 +6,12 @@ import * as android from './android';
 
 
 
+export interface SafeAreaAndSystem {
+  safeArea: Required<Insets>;
+  system: Required<Insets>;
+}
+
+
 export class SafeArea {
   /**
    * native ios functions. use with caution
@@ -27,6 +33,78 @@ export class SafeArea {
       android.Module.setVerbose(verbose);
     }
   }
+
+  /**
+   * stateful event that provides the current safe area insets
+   */
+  public static readonly safeAreaAndSystem = new StatefulEvent<Readonly<SafeAreaAndSystem>>(
+    (() => {
+      if (ios.Module && ios.Module.initialSafeArea) {
+        return {
+          safeArea: ios.Module.initialSafeArea,
+          system: { left: 0, top: 0, right: 0, bottom: 0 },
+        };
+      }
+      if (android.Module) {
+        android.Module.getSafeArea().then((val) => {
+          if (val) {
+            SafeArea.safeAreaAndSystem.UNSAFE_setValue({
+              safeArea: val,
+              system: SafeArea.safeAreaAndSystem.value.system,
+            });
+          }
+        });
+      }
+      return {
+        safeArea: { left: 0, top: 0, right: 0, bottom: 0 },
+        system: { left: 0, top: 0, right: 0, bottom: 0 },
+      };
+    })(),
+    (emit) => {
+      const partialEmit = (value: Partial<SafeAreaAndSystem>) => {
+        const newValue = { ...SafeArea.safeAreaAndSystem.value, ...value };
+        if (JSON.stringify(newValue) === JSON.stringify(SafeArea.safeAreaAndSystem.value)) return;
+        emit(newValue);
+      };
+      if (ios.Events && ios.Module) {
+        const sub = ios.Events.addListener('ReactNativeMoSafeArea', (rs) => {
+          partialEmit({
+            safeArea: rs.safeArea,
+          });
+          if (rs.keyboardArea !== undefined) {
+            // @TODO
+          }
+        });
+        ios.Module.enableSafeAreaEvent(true);
+        return () => {
+          sub.remove();
+          ios.Module!.enableSafeAreaEvent(false);
+        };
+      } else if (android.Events && android.Module) {
+        android.Module.getSafeArea().then((val) => {
+          if (!val) return;
+          partialEmit({
+            safeArea: val,
+          });
+        });
+        const sub = android.Events.addListener('ReactNativeMoSafeArea', (rs) => {
+          partialEmit({
+            safeArea: rs.stableInsets,
+            system: rs.systemWindowInsets,
+          });
+        });
+        android.Module.enableSafeAreaEvent(true);
+        return () => {
+          sub.remove();
+          android.Module!.enableSafeAreaEvent(false);
+        };
+      } else {
+        return () => {
+        };
+      }
+    }
+  );
+
 
   /**
    * stateful event that provides the current safe area insets

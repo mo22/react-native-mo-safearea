@@ -4,7 +4,7 @@ export interface Module {
   setVerbose(verbose: boolean): void;
   enableSafeAreaEvent(enable: boolean): void;
   getSafeArea(): Promise<undefined|Required<Insets>>;
-  measureViewInsets(node: number): Promise<undefined|Required<Insets>>;
+  measureViewInsets(node: number): Promise<undefined|SafeAreaEvent>;
 }
 
 export interface SafeAreaEvent {
