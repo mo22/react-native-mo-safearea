@@ -9,7 +9,12 @@ export interface Module {
 }
 
 export interface SafeAreaEvent {
-  safeArea: Required<Insets>;
+  safeArea?: Required<Insets>;
+  keyboardArea?: {
+    start: { x: number; y: number; width: number; height: number; visible: boolean; };
+    end: { x: number; y: number; width: number; height: number; visible: boolean; };
+    duration: number;
+  };
 }
 
 export const Module = (Platform.OS === 'ios') ? NativeModules.ReactNativeMoSafeArea as Module : undefined;

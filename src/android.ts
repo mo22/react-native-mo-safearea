@@ -8,7 +8,9 @@ export interface Module {
 }
 
 export interface SafeAreaEvent {
-  safeArea: Required<Insets>;
+  stableInsets: Required<Insets>;
+  systemWindowInsets: Required<Insets>;
+  displayCutouts?: Required<Insets>[];
 }
 
 export const Module = (Platform.OS === 'android') ? NativeModules.ReactNativeMoSafeArea as Module : undefined;

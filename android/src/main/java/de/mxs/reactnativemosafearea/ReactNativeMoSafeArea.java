@@ -85,13 +85,15 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 WritableArray list = Arguments.createArray();
-                for (Rect cutout : insets.getDisplayCutout().getBoundingRects()) {
-                    WritableMap rs = Arguments.createMap();
-                    rs.putDouble("top", (1.0 / density) * cutout.top);
-                    rs.putDouble("left", (1.0 / density) * cutout.left);
-                    rs.putDouble("bottom", (1.0 / density) * cutout.bottom);
-                    rs.putDouble("right", (1.0 / density) * cutout.right);
-                    list.pushMap(rs);
+                if (insets.getDisplayCutout() != null) {
+                    for (Rect cutout : insets.getDisplayCutout().getBoundingRects()) {
+                        WritableMap rs = Arguments.createMap();
+                        rs.putDouble("top", (1.0 / density) * cutout.top);
+                        rs.putDouble("left", (1.0 / density) * cutout.left);
+                        rs.putDouble("bottom", (1.0 / density) * cutout.bottom);
+                        rs.putDouble("right", (1.0 / density) * cutout.right);
+                        list.pushMap(rs);
+                    }
                 }
                 args.putArray("displayCutouts", list);
             }
