@@ -3,7 +3,7 @@ import { Insets, View, ViewProps } from 'react-native';
 import { StatefulEvent } from 'mo-core';
 import * as ios from './ios';
 import * as android from './android';
-export interface SafeAreaAndSystem {
+export interface SafeAreaInfo {
     safeArea: Required<Insets>;
     system: Required<Insets>;
 }
@@ -23,11 +23,11 @@ export declare class SafeArea {
     /**
      * stateful event that provides the current safe area insets
      */
-    static readonly safeAreaAndSystem: StatefulEvent<Readonly<SafeAreaAndSystem>>;
+    static readonly safeArea: StatefulEvent<Readonly<SafeAreaInfo>>;
     /**
      * stateful event that provides the current safe area insets
      */
-    static readonly safeArea: StatefulEvent<Readonly<Required<Insets>>>;
+    static readonly oldSafeArea: StatefulEvent<Readonly<Required<Insets>>>;
     /**
      * measure the native distance of a view to all screen borders, taking
      * scrollviews and such into account.
@@ -39,12 +39,10 @@ export declare class SafeArea {
  * the current safe area insets.
  */
 export declare class SafeAreaConsumer extends React.PureComponent<{
-    children: (safeArea: Required<Insets>) => React.ReactElement;
-}, {
-    value: Insets;
-}> {
+    children: (safeArea: SafeAreaInfo) => React.ReactElement;
+}, SafeAreaConsumer['state']> {
     state: {
-        value: Readonly<Required<Insets>>;
+        value: Readonly<SafeAreaInfo>;
     };
     private subscription?;
     componentDidMount(): void;
@@ -52,7 +50,7 @@ export declare class SafeAreaConsumer extends React.PureComponent<{
     render(): React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)>;
 }
 export interface SafeAreaInjectedProps {
-    safeArea: Required<Insets>;
+    safeArea: SafeAreaInfo;
 }
 export declare function withSafeArea<Props extends SafeAreaInjectedProps>(component: React.ComponentType<Props>): (React.ComponentType<Omit<Props, keyof SafeAreaInjectedProps>>);
 export declare function withSafeAreaDecorator<Props extends SafeAreaInjectedProps, ComponentType extends React.ComponentType<Props>>(component: ComponentType & React.ComponentType<Props>): (ComponentType & (new (props: Omit<Props, keyof SafeAreaInjectedProps>, context?: any) => React.Component<Omit<Props, keyof SafeAreaInjectedProps>>));
@@ -78,6 +76,10 @@ export interface SafeAreaViewProps extends ViewProps {
      * which borders to add the safe area insets padding to
      */
     forceInsets?: ForBorders<'always' | 'never' | 'auto'>;
+    /**
+     * include system windows (keyboard!)
+     */
+    includeSystemWindows?: boolean;
 }
 export interface SafeAreaViewState {
     insets?: Required<Insets>;

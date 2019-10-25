@@ -14,14 +14,12 @@ export interface SafeAreaEvent {
             y: number;
             width: number;
             height: number;
-            visible: boolean;
         };
         end: {
             x: number;
             y: number;
             width: number;
             height: number;
-            visible: boolean;
         };
         duration: number;
     };

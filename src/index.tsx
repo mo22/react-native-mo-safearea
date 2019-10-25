@@ -326,6 +326,10 @@ export interface SafeAreaViewProps extends ViewProps {
    * which borders to add the safe area insets padding to
    */
   forceInsets?: ForBorders<'always'|'never'|'auto'>;
+  /**
+   * include system windows (keyboard!)
+   */
+  includeSystemWindows?: boolean;
 }
 
 export interface SafeAreaViewState {
@@ -342,7 +346,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
   private ref = React.createRef<View>();
 
   public render() {
-    const { minPadding, padding, forceInsets, ...props } = this.props;
+    const { minPadding, padding, forceInsets, includeSystemWindows, ...props } = this.props;
     const bMinPadding = fromBorders(minPadding, 0);
     const bPadding = fromBorders(padding, 0);
     const bForceInsets = fromBorders(forceInsets, 'auto');
@@ -361,11 +365,12 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
           // console.log('SafeArea bPadding', bPadding);
           const safeArea = { ...safeAreaInfo.safeArea };
 
-          // system windows? - not always.
-          safeArea.top += safeAreaInfo.system.top;
-          safeArea.left += safeAreaInfo.system.left;
-          safeArea.right += safeAreaInfo.system.right;
-          safeArea.bottom += safeAreaInfo.system.bottom;
+          if (includeSystemWindows !== false) {
+            safeArea.top += safeAreaInfo.system.top;
+            safeArea.left += safeAreaInfo.system.left;
+            safeArea.right += safeAreaInfo.system.right;
+            safeArea.bottom += safeAreaInfo.system.bottom;
+          }
 
           const insets = {
             top: safeArea.top,
