@@ -71,7 +71,15 @@ export class SafeArea {
             safeArea: rs.safeArea,
           });
           if (rs.keyboardArea !== undefined) {
-            // @TODO
+            console.log('ReactNativeMoSafeArea convert keyboard area', rs);
+            partialEmit({
+              system: {
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+              },
+            });
           }
         });
         ios.Module.enableSafeAreaEvent(true);
@@ -315,7 +323,13 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
           // console.log('SafeArea screen', screen);
           // console.log('SafeArea bMinPadding', bMinPadding);
           // console.log('SafeArea bPadding', bPadding);
-          const safeArea = safeAreaInfo.safeArea;
+          const safeArea = { ...safeAreaInfo.safeArea };
+
+          // system windows? - not always.
+          safeArea.top += safeAreaInfo.system.top;
+          safeArea.left += safeAreaInfo.system.left;
+          safeArea.right += safeAreaInfo.system.right;
+          safeArea.bottom += safeAreaInfo.system.bottom;
 
           const insets = {
             top: safeArea.top,
