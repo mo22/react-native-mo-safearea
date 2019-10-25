@@ -50,7 +50,12 @@ export class SafeArea {
           if (!rs) return;
           SafeArea.safeArea.UNSAFE_setValue({
             safeArea: rs.stableInsets,
-            system: rs.systemWindowInsets,
+            system: {
+              top: rs.systemWindowInsets.top - rs.stableInsets.top,
+              left: rs.systemWindowInsets.left - rs.stableInsets.left,
+              right: rs.systemWindowInsets.right - rs.stableInsets.right,
+              bottom: rs.systemWindowInsets.bottom - rs.stableInsets.bottom,
+            },
           });
         });
       }
@@ -79,7 +84,6 @@ export class SafeArea {
               right: 0,
               bottom: 0,
             };
-
             if (rs.keyboardArea.end.x === 0 && rs.keyboardArea.end.width === Dimensions.get('screen').width) {
               // full width
             } else if (rs.keyboardArea.end.x === 0) {
@@ -87,9 +91,8 @@ export class SafeArea {
             } else if (rs.keyboardArea.end.x + rs.keyboardArea.end.width === Dimensions.get('screen').width) {
               insets.right = rs.keyboardArea.end.width;
             } else {
-              console.log('keyboard in center?!');
+              console.log('ReactNativeMoSafeArea x center?');
             }
-
             if (rs.keyboardArea.end.y === 0 && rs.keyboardArea.end.height === Dimensions.get('screen').height) {
               // full width
             } else if (rs.keyboardArea.end.y === 0) {
@@ -97,15 +100,11 @@ export class SafeArea {
             } else if (rs.keyboardArea.end.y + rs.keyboardArea.end.height === Dimensions.get('screen').height) {
               insets.bottom = rs.keyboardArea.end.height;
             } else {
-              console.log('keyboard in center?!!!');
+              console.log('ReactNativeMoSafeArea y center?');
             }
-
-            console.log('ReactNativeMoSafeArea keyboardArea', insets);
-
             partialEmit({
               system: insets,
             });
-
           }
         });
         ios.Module.enableSafeAreaEvent(true);
@@ -118,13 +117,23 @@ export class SafeArea {
           if (!rs) return;
           partialEmit({
             safeArea: rs.stableInsets,
-            system: rs.systemWindowInsets,
+            system: {
+              top: rs.systemWindowInsets.top - rs.stableInsets.top,
+              left: rs.systemWindowInsets.left - rs.stableInsets.left,
+              right: rs.systemWindowInsets.right - rs.stableInsets.right,
+              bottom: rs.systemWindowInsets.bottom - rs.stableInsets.bottom,
+            },
           });
         });
         const sub = android.Events.addListener('ReactNativeMoSafeArea', (rs) => {
           partialEmit({
             safeArea: rs.stableInsets,
-            system: rs.systemWindowInsets,
+            system: {
+              top: rs.systemWindowInsets.top - rs.stableInsets.top,
+              left: rs.systemWindowInsets.left - rs.stableInsets.left,
+              right: rs.systemWindowInsets.right - rs.stableInsets.right,
+              bottom: rs.systemWindowInsets.bottom - rs.stableInsets.bottom,
+            },
           });
         });
         android.Module.enableSafeAreaEvent(true);
@@ -345,11 +354,11 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
           const { style, onLayout, ...otherProps } = props;
           const flatStyle = StyleSheet.flatten(style || {});
           const screen = Dimensions.get('screen');
-          console.log('SafeArea safeArea', safeAreaInfo.safeArea);
-          console.log('SafeArea system', safeAreaInfo.system);
-          console.log('SafeArea screen', screen);
-          console.log('SafeArea bMinPadding', bMinPadding);
-          console.log('SafeArea bPadding', bPadding);
+          // console.log('SafeArea safeArea', safeAreaInfo.safeArea);
+          // console.log('SafeArea system', safeAreaInfo.system);
+          // console.log('SafeArea screen', screen);
+          // console.log('SafeArea bMinPadding', bMinPadding);
+          // console.log('SafeArea bPadding', bPadding);
           const safeArea = { ...safeAreaInfo.safeArea };
 
           // system windows? - not always.
