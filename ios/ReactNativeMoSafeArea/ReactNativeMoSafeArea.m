@@ -62,14 +62,16 @@ RCT_EXPORT_METHOD(getSafeArea:(RCTPromiseResolveBlock)resolve reject:(RCTPromise
         if (@available(iOS 11.0, *)) {
             UIEdgeInsets insets = UIApplication.sharedApplication.keyWindow.safeAreaInsets;
             if (_verbose) NSLog(@"ReactNativeMoSafeArea.observeValueForKeyPath new insets %@", NSStringFromUIEdgeInsets(insets));
-            [self sendEventWithName:@"ReactNativeMoSafeArea" body:@{
-                @"safeArea": @{
-                    @"top": @(insets.top),
-                    @"bottom": @(insets.bottom),
-                    @"left": @(insets.left),
-                    @"right": @(insets.right),
-                },
-            }];
+            if (self.bridge) {
+                [self sendEventWithName:@"ReactNativeMoSafeArea" body:@{
+                    @"safeArea": @{
+                        @"top": @(insets.top),
+                        @"bottom": @(insets.bottom),
+                        @"left": @(insets.left),
+                        @"right": @(insets.right),
+                    },
+                }];
+            }
         }
     }
 }
@@ -82,12 +84,16 @@ RCT_EXPORT_METHOD(enableSafeAreaEvent:(BOOL)enable) {
         self->_referenceView = RCTSharedApplication().keyWindow.rootViewController.view;
         if (_verbose) NSLog(@"ReactNativeMoSafeArea.enableSafeAreaEvent enable view %@", self->_referenceView);
         [self->_referenceView addObserver:self forKeyPath:@"safeAreaInsets" options:NSKeyValueObservingOptionNew context:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardNotification:) name:UIKeyboardWillShowNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardNotification:) name:UIKeyboardWillChangeFrameNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardNotification:) name:UIKeyboardWillHideNotification object:nil];
     } else {
         if (_referenceView) {
             if (_verbose) NSLog(@"ReactNativeMoSafeArea.enableSafeAreaEvent disable");
             [self->_referenceView removeObserver:self forKeyPath:@"safeAreaInsets"];
             self->_referenceView = nil;
         }
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
 }
 
@@ -144,6 +150,12 @@ RCT_EXPORT_METHOD(measureViewInsets:(nonnull NSNumber*)node resolve:(RCTPromiseR
         @"left": @(insets.left),
         @"right": @(insets.right),
     });
+}
+
+- (void)handleKeyboardNotification:(NSNotification *)notification {
+    if (_verbose) NSLog(@"ReactNativeMoSafeArea.handleKeyboardNotification %@", notification);
+    if (self.bridge) {
+    }
 }
 
 @end
