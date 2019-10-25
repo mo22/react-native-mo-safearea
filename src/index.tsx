@@ -46,13 +46,12 @@ export class SafeArea {
         };
       }
       if (android.Module) {
-        android.Module.getSafeArea().then((val) => {
-          if (val) {
-            SafeArea.safeAreaAndSystem.UNSAFE_setValue({
-              safeArea: val,
-              system: SafeArea.safeAreaAndSystem.value.system,
-            });
-          }
+        android.Module.getSafeArea().then((rs) => {
+          if (!rs) return;
+          SafeArea.safeAreaAndSystem.UNSAFE_setValue({
+            safeArea: rs.stableInsets,
+            system: rs.systemWindowInsets,
+          });
         });
       }
       return {
@@ -81,10 +80,11 @@ export class SafeArea {
           ios.Module!.enableSafeAreaEvent(false);
         };
       } else if (android.Events && android.Module) {
-        android.Module.getSafeArea().then((val) => {
-          if (!val) return;
+        android.Module.getSafeArea().then((rs) => {
+          if (!rs) return;
           partialEmit({
-            safeArea: val,
+            safeArea: rs.stableInsets,
+            system: rs.systemWindowInsets,
           });
         });
         const sub = android.Events.addListener('ReactNativeMoSafeArea', (rs) => {
@@ -111,51 +111,15 @@ export class SafeArea {
    */
   public static readonly safeArea = new StatefulEvent<Readonly<Required<Insets>>>(
     (() => {
-      if (ios.Module && ios.Module.initialSafeArea) {
-        return ios.Module.initialSafeArea;
-      }
-      if (android.Module) {
-        android.Module.getSafeArea().then((val) => {
-          if (val) SafeArea.safeArea.UNSAFE_setValue(val);
-        });
-      }
-      return { top: 0, left: 0, bottom: 0, right: 0 };
+      return SafeArea.safeAreaAndSystem.value.safeArea;
     })(),
     (emit) => {
-      if (ios.Events && ios.Module) {
-        let cur: Required<Insets>|undefined;
-        const sub = ios.Events.addListener('ReactNativeMoSafeArea', (rs) => {
-          if (JSON.stringify(rs.safeArea) === JSON.stringify(cur)) return;
-          cur = rs.safeArea;
-          emit(rs.safeArea);
-        });
-        ios.Module.enableSafeAreaEvent(true);
-        return () => {
-          sub.remove();
-          ios.Module!.enableSafeAreaEvent(false);
-        };
-      } else if (android.Events && android.Module) {
-        let cur: Required<Insets>|undefined;
-        android.Module.getSafeArea().then((val) => {
-          if (!val) return;
-          if (JSON.stringify(val) === JSON.stringify(cur)) return;
-          cur = val;
-          emit(val);
-        });
-        const sub = android.Events.addListener('ReactNativeMoSafeArea', (rs) => {
-          if (JSON.stringify(rs.safeArea) === JSON.stringify(cur)) return;
-          cur = rs.safeArea;
-          emit(rs.safeArea);
-        });
-        android.Module.enableSafeAreaEvent(true);
-        return () => {
-          sub.remove();
-          android.Module!.enableSafeAreaEvent(false);
-        };
-      } else {
-        return () => {
-        };
-      }
+      const sub = SafeArea.safeAreaAndSystem.subscribe((rs) => {
+        emit(rs.safeArea);
+      });
+      return () => {
+        sub.release();
+      };
     }
   );
 

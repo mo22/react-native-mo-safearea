@@ -3,8 +3,8 @@ import { NativeModules, NativeEventEmitter, EmitterSubscription, Insets, Platfor
 export interface Module {
   setVerbose(verbose: boolean): void;
   enableSafeAreaEvent(enable: boolean): void;
-  getSafeArea(): Promise<undefined|Required<Insets>>;
-  measureViewInsets(node: number): Promise<undefined|SafeAreaEvent>;
+  getSafeArea(): Promise<undefined|SafeAreaEvent>;
+  measureViewInsets(node: number): Promise<undefined|Required<Insets>>;
 }
 
 export interface SafeAreaEvent {

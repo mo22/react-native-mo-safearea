@@ -3,6 +3,10 @@ import { Insets, View, ViewProps } from 'react-native';
 import { StatefulEvent } from 'mo-core';
 import * as ios from './ios';
 import * as android from './android';
+export interface SafeAreaAndSystem {
+    safeArea: Required<Insets>;
+    system: Required<Insets>;
+}
 export declare class SafeArea {
     /**
      * native ios functions. use with caution
@@ -16,6 +20,10 @@ export declare class SafeArea {
      * be verbose
      */
     static setVerbose(verbose: boolean): void;
+    /**
+     * stateful event that provides the current safe area insets
+     */
+    static readonly safeAreaAndSystem: StatefulEvent<Readonly<SafeAreaAndSystem>>;
     /**
      * stateful event that provides the current safe area insets
      */
