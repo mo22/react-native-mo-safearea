@@ -8,6 +8,7 @@ Install just like your ordinary react-native module.
 Some areas of the screen are not freely usable:
 - cutouts for camera
 - translucent status / navigation bars
+- keyboard / "system windows" in android
 
 This module provides the dimensions of those areas and a view that adds padding to avoid these areas.
 
@@ -33,7 +34,10 @@ Please check the [example/](example/) code.
 import { SafeArea } from 'react-native-mo-safearea';
 
 const sub = SafeArea.safeArea.subscribe((safeArea) => {
-  console.log(safeArea);
+  // minimum safe area (top, left, right, bottom)
+  console.log(safeArea.safeArea);
+  // additional safe area for system windows (keyboard)
+  console.log(safeArea.system);
 });
 sub.release();
 
@@ -46,7 +50,10 @@ return (
 );
 
 return (
-  <SafeAreaView forceInsets={{ top: 'always', horizontal: 'always', bottom: 'auto' }}>
+  <SafeAreaView
+    forceInsets={{ top: 'always', horizontal: 'always', bottom: 'auto' }}
+    includeSystemWindows={true} // true: include keyboard
+  >
     <Content />
   </SafeAreaView>
 );
