@@ -61,10 +61,7 @@ export class SafeArea {
     })(),
     (emit) => {
       const partialEmit = (value: Partial<SafeAreaInfo>) => {
-        console.log('partialEmit oldValue', SafeArea.safeArea.value);
-        console.log('partialEmit value', value);
         const newValue = { ...SafeArea.safeArea.value, ...value };
-        console.log('partialEmit newValue', newValue);
         if (JSON.stringify(newValue) === JSON.stringify(SafeArea.safeArea.value)) return;
         emit(newValue);
       };
@@ -76,22 +73,39 @@ export class SafeArea {
             });
           }
           if (rs.keyboardArea !== undefined) {
-            console.log('ReactNativeMoSafeArea convert keyboard area', rs);
-            console.log('screen', Dimensions.get('screen'));
-            // height stays constant !
+            const insets = {
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            };
 
-            // { duration: 250,
-            //   end: { y: 407, visible: 1, x: 0, height: 260, width: 375 },
-            //   start: { y: 667, visible: 1, x: 0, height: 260, width: 375 } } }
+            if (rs.keyboardArea.end.x === 0 && rs.keyboardArea.end.width === Dimensions.get('screen').width) {
+              // full width
+            } else if (rs.keyboardArea.end.x === 0) {
+              insets.left = rs.keyboardArea.end.width;
+            } else if (rs.keyboardArea.end.x + rs.keyboardArea.end.width === Dimensions.get('screen').width) {
+              insets.right = rs.keyboardArea.end.width;
+            } else {
+              console.log('keyboard in center?!');
+            }
+
+            if (rs.keyboardArea.end.y === 0 && rs.keyboardArea.end.height === Dimensions.get('screen').height) {
+              // full width
+            } else if (rs.keyboardArea.end.y === 0) {
+              insets.top = rs.keyboardArea.end.height;
+            } else if (rs.keyboardArea.end.y + rs.keyboardArea.end.height === Dimensions.get('screen').height) {
+              insets.bottom = rs.keyboardArea.end.height;
+            } else {
+              console.log('keyboard in center?!!!');
+            }
+
+            console.log('ReactNativeMoSafeArea keyboardArea', insets);
 
             partialEmit({
-              system: {
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-              },
+              system: insets,
             });
+
           }
         });
         ios.Module.enableSafeAreaEvent(true);
