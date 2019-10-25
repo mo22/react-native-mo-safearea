@@ -60,14 +60,6 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
             final float density = activity.getResources().getDisplayMetrics().density;
             WritableMap args = Arguments.createMap();
             {
-                WritableMap args2 = Arguments.createMap();
-                args2.putDouble("top", (1.0 / density) * insets.getStableInsetTop());
-                args2.putDouble("left", (1.0 / density) * insets.getStableInsetLeft());
-                args2.putDouble("bottom", (1.0 / density) * insets.getStableInsetBottom());
-                args2.putDouble("right", (1.0 / density) * insets.getStableInsetRight());
-                args.putMap("safeArea", args2);
-            }
-            {
                 WritableMap rs = Arguments.createMap();
                 rs.putDouble("top", (1.0 / density) * insets.getStableInsetTop());
                 rs.putDouble("left", (1.0 / density) * insets.getStableInsetLeft());
