@@ -54,9 +54,9 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
         }
         windowInsetView = activity.findViewById(android.R.id.content);
         windowInsetView.setOnApplyWindowInsetsListener((v, insets) -> {
-            Log.i("XXX", "insets changed " + insets);
+            if (verbose) Log.i("ReactNativeMoSafeArea", "insets changed " + insets);
             final WindowInsets insets2 = activity.getWindow().getDecorView().getRootWindowInsets();
-            Log.i("XXX", "insets changed insets2 " + insets2);
+            if (verbose) Log.i("ReactNativeMoSafeArea", "insets2 " + insets2);
             final float density = activity.getResources().getDisplayMetrics().density;
             WritableMap args = Arguments.createMap();
             {
