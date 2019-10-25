@@ -6,7 +6,7 @@ import * as android from './android';
 
 
 
-export interface SafeAreaAndSystem {
+export interface SafeAreaInfo {
   safeArea: Required<Insets>;
   system: Required<Insets>;
 }
@@ -37,7 +37,7 @@ export class SafeArea {
   /**
    * stateful event that provides the current safe area insets
    */
-  public static readonly safeAreaAndSystem = new StatefulEvent<Readonly<SafeAreaAndSystem>>(
+  public static readonly safeArea = new StatefulEvent<Readonly<SafeAreaInfo>>(
     (() => {
       if (ios.Module && ios.Module.initialSafeArea) {
         return {
@@ -48,7 +48,7 @@ export class SafeArea {
       if (android.Module) {
         android.Module.getSafeArea().then((rs) => {
           if (!rs) return;
-          SafeArea.safeAreaAndSystem.UNSAFE_setValue({
+          SafeArea.safeArea.UNSAFE_setValue({
             safeArea: rs.stableInsets,
             system: rs.systemWindowInsets,
           });
@@ -60,9 +60,9 @@ export class SafeArea {
       };
     })(),
     (emit) => {
-      const partialEmit = (value: Partial<SafeAreaAndSystem>) => {
-        const newValue = { ...SafeArea.safeAreaAndSystem.value, ...value };
-        if (JSON.stringify(newValue) === JSON.stringify(SafeArea.safeAreaAndSystem.value)) return;
+      const partialEmit = (value: Partial<SafeAreaInfo>) => {
+        const newValue = { ...SafeArea.safeArea.value, ...value };
+        if (JSON.stringify(newValue) === JSON.stringify(SafeArea.safeArea.value)) return;
         emit(newValue);
       };
       if (ios.Events && ios.Module) {
@@ -109,12 +109,12 @@ export class SafeArea {
   /**
    * stateful event that provides the current safe area insets
    */
-  public static readonly safeArea = new StatefulEvent<Readonly<Required<Insets>>>(
+  public static readonly oldSafeArea = new StatefulEvent<Readonly<Required<Insets>>>(
     (() => {
-      return SafeArea.safeAreaAndSystem.value.safeArea;
+      return SafeArea.safeArea.value.safeArea;
     })(),
     (emit) => {
-      const sub = SafeArea.safeAreaAndSystem.subscribe((rs) => {
+      const sub = SafeArea.safeArea.subscribe((rs) => {
         emit(rs.safeArea);
       });
       return () => {
@@ -147,10 +147,8 @@ export class SafeArea {
  * the current safe area insets.
  */
 export class SafeAreaConsumer extends React.PureComponent<{
-  children: (safeArea: Required<Insets>) => React.ReactElement
-}, {
-  value: Insets;
-}> {
+  children: (safeArea: SafeAreaInfo) => React.ReactElement
+}, SafeAreaConsumer['state']> {
   public state = { value: SafeArea.safeArea.value };
   private subscription?: Releaseable;
 
@@ -172,7 +170,7 @@ export class SafeAreaConsumer extends React.PureComponent<{
 
 
 export interface SafeAreaInjectedProps {
-  safeArea: Required<Insets>;
+  safeArea: SafeAreaInfo;
 }
 
 export function withSafeArea<
@@ -309,7 +307,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
 
     return (
       <SafeAreaConsumer>
-        {(safeArea) => {
+        {(safeAreaInfo) => {
           const { style, onLayout, ...otherProps } = props;
           const flatStyle = StyleSheet.flatten(style || {});
           const screen = Dimensions.get('screen');
@@ -317,6 +315,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
           // console.log('SafeArea screen', screen);
           // console.log('SafeArea bMinPadding', bMinPadding);
           // console.log('SafeArea bPadding', bPadding);
+          const safeArea = safeAreaInfo.safeArea;
 
           const insets = {
             top: safeArea.top,
