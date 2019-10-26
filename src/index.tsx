@@ -91,16 +91,17 @@ export class SafeArea {
             } else if (rs.keyboardArea.end.x + rs.keyboardArea.end.width === Dimensions.get('screen').width) {
               insets.right = rs.keyboardArea.end.width;
             } else {
-              console.log('ReactNativeMoSafeArea x center?');
+              console.log('ReactNativeMoSafeArea x center?', rs.keyboardArea);
             }
             if (rs.keyboardArea.end.y === 0 && rs.keyboardArea.end.height === Dimensions.get('screen').height) {
-              // full width
-            } else if (rs.keyboardArea.end.y === 0) {
-              insets.top = rs.keyboardArea.end.height;
-            } else if (rs.keyboardArea.end.y + rs.keyboardArea.end.height === Dimensions.get('screen').height) {
-              insets.bottom = rs.keyboardArea.end.height;
+              // full height
+            } else if (rs.keyboardArea.end.y <= 0) {
+              insets.top = Math.max(0, rs.keyboardArea.end.y + rs.keyboardArea.end.height);
+            } else if (rs.keyboardArea.end.y + rs.keyboardArea.end.height >= Dimensions.get('screen').height) {
+              insets.bottom = Math.max(0, Dimensions.get('screen').height - rs.keyboardArea.end.y);
             } else {
-              console.log('ReactNativeMoSafeArea y center?');
+              // can happen?
+              console.log('ReactNativeMoSafeArea y center?', rs.keyboardArea);
             }
             partialEmit({
               system: insets,
@@ -304,7 +305,7 @@ function fromBorders<T>(value: ForBorders<T>, def?: T): ByBorder<T|undefined> {
     if ('left' in value) res.left = value.left;
     if ('right' in value) res.right = value.right;
     if ('bottom' in value) res.bottom = value.bottom;
-  } else if (value !== undefined) {
+  } else if (value !== undefined && typeof value === 'number') {
     res.top = res.left = res.right = res.bottom = value;
   }
   return res;
