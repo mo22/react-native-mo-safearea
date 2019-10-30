@@ -21,6 +21,10 @@ export declare class SafeArea {
      */
     static setVerbose(verbose: boolean): void;
     /**
+     * the last info about animation duration
+     */
+    static systemAnimationDuration: number | undefined;
+    /**
      * stateful event that provides the current safe area insets
      */
     static readonly safeArea: StatefulEvent<Readonly<SafeAreaInfo>>;
@@ -80,6 +84,10 @@ export interface SafeAreaViewProps extends ViewProps {
      * include system windows (keyboard!)
      */
     includeSystemWindows?: boolean;
+    /**
+     * animate system window changes
+     */
+    animateSystemWindows?: boolean;
 }
 export interface SafeAreaViewState {
     insets?: Required<Insets>;

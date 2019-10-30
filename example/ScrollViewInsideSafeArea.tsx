@@ -10,7 +10,7 @@ function keysOf<T extends {}>(obj: T): (keyof T)[] {
 }
 
 @withSafeAreaDecorator
-export default class ScrollViewInsideSafeArea extends React.Component<NavigationInjectedProps & SafeAreaInjectedProps> {
+export default class ScrollViewInsideSafeArea extends React.Component<NavigationInjectedProps & SafeAreaInjectedProps, ScrollViewInsideSafeArea['state']> {
   public state = {
     forceInsets: {
       top: 'auto' as 'always'|'never'|'auto',
@@ -30,6 +30,8 @@ export default class ScrollViewInsideSafeArea extends React.Component<Navigation
       right: 0,
       bottom: 0,
     },
+    includeSystemWindows: true,
+    animateSystemWindows: true,
   };
 
   public render() {
@@ -44,6 +46,8 @@ export default class ScrollViewInsideSafeArea extends React.Component<Navigation
         minPadding={this.state.minPadding}
         padding={this.state.padding}
         forceInsets={this.state.forceInsets}
+        includeSystemWindows={this.state.includeSystemWindows}
+        animateSystemWindows={this.state.animateSystemWindows}
       >
         <KeyboardAvoidingView style={{ flex: 1 }}>
           <ScrollView style={{ backgroundColor: 'white', flex: 1 }}>
@@ -117,6 +121,24 @@ export default class ScrollViewInsideSafeArea extends React.Component<Navigation
                 this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'Test' }));
               }}
               title="show Test"
+            />
+
+            <View style={{ height: 20 }} />
+
+            <ListItem
+              title="includeSystemWindows"
+              switch={{
+                value: this.state.includeSystemWindows,
+                onValueChange: (v) => this.setState({ includeSystemWindows: v }),
+              }}
+            />
+
+            <ListItem
+              title="animateSystemWindows"
+              switch={{
+                value: this.state.animateSystemWindows,
+                onValueChange: (v) => this.setState({ animateSystemWindows: v }),
+              }}
             />
 
           </ScrollView>

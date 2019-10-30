@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Insets, View, findNodeHandle, ViewProps, StyleSheet, Dimensions, LayoutChangeEvent } from 'react-native';
+import { Insets, View, findNodeHandle, ViewProps, StyleSheet, Dimensions, LayoutChangeEvent, LayoutAnimation } from 'react-native';
 import { StatefulEvent, Releaseable } from 'mo-core';
 import * as ios from './ios';
 import * as android from './android';
@@ -33,6 +33,11 @@ export class SafeArea {
       android.Module.setVerbose(verbose);
     }
   }
+
+  /**
+   * the last info about animation duration
+   */
+  public static systemAnimationDuration: number|undefined;
 
   /**
    * stateful event that provides the current safe area insets
@@ -103,9 +108,7 @@ export class SafeArea {
               // can happen?
               console.log('ReactNativeMoSafeArea y center?', rs.keyboardArea);
             }
-            console.log('SafeAreaCalc1 insets', insets);
-            console.log('SafeAreaCalc2 safeArea', SafeArea.safeArea.value.safeArea);
-            // remove safeaArea instes?
+            SafeArea.systemAnimationDuration = rs.keyboardArea.duration;
             partialEmit({
               system: {
                 top: Math.max(0, insets.top - SafeArea.safeArea.value.safeArea.top),
@@ -339,6 +342,10 @@ export interface SafeAreaViewProps extends ViewProps {
    * include system windows (keyboard!)
    */
   includeSystemWindows?: boolean;
+  /**
+   * animate system window changes
+   */
+  animateSystemWindows?: boolean;
 }
 
 export interface SafeAreaViewState {
@@ -355,11 +362,12 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
   private ref = React.createRef<View>();
 
   public render() {
-    const { minPadding, padding, forceInsets, includeSystemWindows, ...props } = this.props;
+    const { minPadding, padding, forceInsets, includeSystemWindows, animateSystemWindows, ...props } = this.props;
     const bMinPadding = fromBorders(minPadding, 0);
     const bPadding = fromBorders(padding, 0);
     const bForceInsets = fromBorders(forceInsets, 'auto');
     const needAuto = (bForceInsets.top === 'auto') || (bForceInsets.left === 'auto') || (bForceInsets.right === 'auto') || (bForceInsets.bottom === 'auto');
+    let lastSystemArea: Required<Insets>|undefined;
 
     return (
       <SafeAreaConsumer>
@@ -379,6 +387,12 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
             safeArea.left += safeAreaInfo.system.left;
             safeArea.right += safeAreaInfo.system.right;
             safeArea.bottom += safeAreaInfo.system.bottom;
+            if (lastSystemArea !== safeAreaInfo.system) {
+              lastSystemArea = safeAreaInfo.system;
+              if (animateSystemWindows && SafeArea.systemAnimationDuration) {
+                LayoutAnimation.configureNext({ duration: SafeArea.systemAnimationDuration });
+              }
+            }
           }
 
           const insets = {
