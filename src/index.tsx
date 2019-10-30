@@ -360,6 +360,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
   };
 
   private ref = React.createRef<View>();
+  private lastSystemArea: Required<Insets>|undefined;
 
   public render() {
     const { minPadding, padding, forceInsets, includeSystemWindows, animateSystemWindows, ...props } = this.props;
@@ -367,7 +368,6 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
     const bPadding = fromBorders(padding, 0);
     const bForceInsets = fromBorders(forceInsets, 'auto');
     const needAuto = (bForceInsets.top === 'auto') || (bForceInsets.left === 'auto') || (bForceInsets.right === 'auto') || (bForceInsets.bottom === 'auto');
-    let lastSystemArea: Required<Insets>|undefined;
 
     return (
       <SafeAreaConsumer>
@@ -387,9 +387,8 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
             safeArea.left += safeAreaInfo.system.left;
             safeArea.right += safeAreaInfo.system.right;
             safeArea.bottom += safeAreaInfo.system.bottom;
-            if (JSON.stringify(lastSystemArea) !== JSON.stringify(safeAreaInfo.system)) {
-              console.log('SafeAreaView: safeAreaInfo.system changed', safeAreaInfo.system);
-              lastSystemArea = safeAreaInfo.system;
+            if (JSON.stringify(this.lastSystemArea) !== JSON.stringify(safeAreaInfo.system)) {
+              this.lastSystemArea = safeAreaInfo.system;
               if (animateSystemWindows && SafeArea.systemAnimationDuration) {
                 LayoutAnimation.configureNext({
                   duration: SafeArea.systemAnimationDuration || 100,

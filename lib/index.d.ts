@@ -98,6 +98,7 @@ export interface SafeAreaViewState {
 export declare class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAreaViewState> {
     state: SafeAreaViewState;
     private ref;
+    private lastSystemArea;
     render(): JSX.Element;
 }
 export {};
