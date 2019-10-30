@@ -103,8 +103,14 @@ export class SafeArea {
               // can happen?
               console.log('ReactNativeMoSafeArea y center?', rs.keyboardArea);
             }
+            // remove safeaArea instes?
             partialEmit({
-              system: insets,
+              system: {
+                top: insets.top - SafeArea.safeArea.value.safeArea.top,
+                left: insets.left - SafeArea.safeArea.value.safeArea.left,
+                right: insets.right - SafeArea.safeArea.value.safeArea.right,
+                bottom: insets.bottom - SafeArea.safeArea.value.safeArea.bottom,
+              },
             });
           }
         });

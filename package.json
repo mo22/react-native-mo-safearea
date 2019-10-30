@@ -24,9 +24,9 @@
   },
   "homepage": "https://github.com/mo22/react-native-mo-safearea#readme",
   "devDependencies": {
-    "@types/react-native": "^0.60.21",
+    "@types/react-native": "^0.60.22",
     "react": "^16.11.0",
-    "react-native": "^0.61.2",
+    "react-native": "^0.61.3",
     "typescript": "^3.6.4"
   },
   "dependencies": {
