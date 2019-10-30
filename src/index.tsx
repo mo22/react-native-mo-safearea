@@ -387,10 +387,16 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
             safeArea.left += safeAreaInfo.system.left;
             safeArea.right += safeAreaInfo.system.right;
             safeArea.bottom += safeAreaInfo.system.bottom;
-            if (lastSystemArea !== safeAreaInfo.system) {
+            if (JSON.stringify(lastSystemArea) !== JSON.stringify(safeAreaInfo.system)) {
+              console.log('SafeAreaView: safeAreaInfo.system changed', safeAreaInfo.system);
               lastSystemArea = safeAreaInfo.system;
               if (animateSystemWindows && SafeArea.systemAnimationDuration) {
-                LayoutAnimation.configureNext({ duration: SafeArea.systemAnimationDuration });
+                LayoutAnimation.configureNext({
+                  duration: SafeArea.systemAnimationDuration || 100,
+                  update: {
+                    type: 'keyboard',
+                  },
+                });
               }
             }
           }
