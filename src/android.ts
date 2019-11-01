@@ -5,6 +5,12 @@ export interface Module {
   enableSafeAreaEvent(enable: boolean): void;
   getSafeArea(): Promise<undefined|SafeAreaEvent>;
   measureViewInsets(node: number): Promise<undefined|Required<Insets>>;
+  getCompatInfo(): Promise<{
+    statusBarHeight?: number;
+    actionBarHeight?: number;
+    navigationBarHeight?: number;
+    decorViewRect?: Required<Insets>;
+  }>;
 }
 
 export interface SafeAreaEvent {
