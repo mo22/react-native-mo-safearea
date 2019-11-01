@@ -56,17 +56,44 @@ export class SafeArea {
   private static async getAndroidInitialSafeArea() {
     const rs = await android.Module!.getSafeArea();
     if (rs && 0) {
+      SafeArea.androidCompatMode = false;
       return SafeArea.convertAndroidSafeArea(rs);
     } else {
       SafeArea.androidCompatMode = true;
       const info = await android.Module!.getCompatInfo();
       const screen = Dimensions.get('screen');
+      console.log('info', info);
+      console.log('screen', screen);
+      // decorViewRect: { bottom: 1080, right: 2168, left: 126, top: 63 },
+      // navigationBarHeight: 126,
+      // actionBarHeight: 126,
+      // statusBarHeight: 63 }
       return {
         safeArea: {
-          top: (info.statusBarHeight || 0) / screen.scale,
-          left: 0,
-          right: 0,
-          bottom: (info.navigationBarHeight || 0) / screen.scale,
+          top:
+            info.decorViewRect ? (
+              info.decorViewRect.top / screen.scale
+            ) : (
+              (info.statusBarHeight) || 0 / screen.scale
+            ),
+          left:
+            info.decorViewRect ? (
+              info.decorViewRect.left / screen.scale
+            ) : (
+              0
+            ),
+          right:
+            info.decorViewRect ? (
+              screen.width - (info.decorViewRect.right / screen.scale)
+            ) : (
+              0
+            ),
+          bottom:
+            info.decorViewRect ? (
+              screen.height - (info.decorViewRect.bottom / screen.scale)
+            ) : (
+              (info.navigationBarHeight) || 0 / screen.scale
+            ),
         },
         system: {
           top: 0,
