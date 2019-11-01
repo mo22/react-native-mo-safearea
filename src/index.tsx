@@ -51,18 +51,37 @@ export class SafeArea {
         };
       }
       if (android.Module) {
-        android.Module.getSafeArea().then((rs) => {
-          if (!rs) return;
-          SafeArea.safeArea.UNSAFE_setValue({
-            safeArea: rs.stableInsets,
-            system: {
-              top: rs.systemWindowInsets.top - rs.stableInsets.top,
-              left: rs.systemWindowInsets.left - rs.stableInsets.left,
-              right: rs.systemWindowInsets.right - rs.stableInsets.right,
-              bottom: rs.systemWindowInsets.bottom - rs.stableInsets.bottom,
-            },
-          });
-        });
+        (async () => {
+          const rs = await android.Module!.getSafeArea();
+          if (rs && 0) {
+            SafeArea.safeArea.UNSAFE_setValue({
+              safeArea: rs.stableInsets,
+              system: {
+                top: rs.systemWindowInsets.top - rs.stableInsets.top,
+                left: rs.systemWindowInsets.left - rs.stableInsets.left,
+                right: rs.systemWindowInsets.right - rs.stableInsets.right,
+                bottom: rs.systemWindowInsets.bottom - rs.stableInsets.bottom,
+              },
+            });
+          } else {
+            const info = await android.Module!.getCompatInfo();
+            console.log('info', info);
+            SafeArea.safeArea.UNSAFE_setValue({
+              safeArea: {
+                top: info.statusBarHeight || 0,
+                left: 0,
+                right: 0,
+                bottom: info.navigationBarHeight || 0,
+              },
+              system: {
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+              },
+            });
+          }
+        })();
       }
       return {
         safeArea: { left: 0, top: 0, right: 0, bottom: 0 },

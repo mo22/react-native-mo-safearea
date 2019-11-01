@@ -2,7 +2,6 @@ import * as React from 'react';
 import './patchReactNavigationSafeAreaView';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { SafeArea } from 'react-native-mo-safearea';
 
 const AppNavigator = createStackNavigator({
   Menu: {
@@ -35,11 +34,6 @@ const AppNavigator = createStackNavigator({
 const AppContainer = createAppContainer(AppNavigator);
 
 class App extends React.PureComponent<{}> {
-  public async componentDidMount() {
-    if (SafeArea.android.Module) {
-      console.log('getCompatInfo', await SafeArea.android.Module.getCompatInfo());
-    }
-  }
   public render() {
     return (
       <AppContainer />
