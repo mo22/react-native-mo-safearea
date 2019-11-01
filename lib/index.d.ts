@@ -25,6 +25,7 @@ export declare class SafeArea {
      */
     static systemAnimationDuration: number | undefined;
     private static convertAndroidSafeArea;
+    private static androidCompatMode;
     private static getAndroidInitialSafeArea;
     private static convertIosKeyboardArea;
     /**

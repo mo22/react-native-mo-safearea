@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Insets, View, findNodeHandle, ViewProps, StyleSheet, Dimensions, LayoutChangeEvent, LayoutAnimation, ScaledSize } from 'react-native';
+import { Insets, View, findNodeHandle, ViewProps, StyleSheet, Dimensions, LayoutChangeEvent, LayoutAnimation } from 'react-native';
 import { StatefulEvent, Releaseable } from 'mo-core';
 import * as ios from './ios';
 import * as android from './android';
@@ -51,11 +51,14 @@ export class SafeArea {
     };
   }
 
+  private static androidCompatMode = false;
+
   private static async getAndroidInitialSafeArea() {
     const rs = await android.Module!.getSafeArea();
     if (rs && 0) {
       return SafeArea.convertAndroidSafeArea(rs);
     } else {
+      SafeArea.androidCompatMode = true;
       const info = await android.Module!.getCompatInfo();
       const screen = Dimensions.get('screen');
       return {
@@ -161,8 +164,10 @@ export class SafeArea {
         const sub = android.Events.addListener('ReactNativeMoSafeArea', (rs) => {
           partialEmit(SafeArea.convertAndroidSafeArea(rs));
         });
-        const screenHandler = (args: { window: ScaledSize; screen: ScaledSize }) => {
-          console.log('screenHandler', args);
+        const screenHandler = () => {
+          if (SafeArea.androidCompatMode) {
+            SafeArea.getAndroidInitialSafeArea().then((safeArea) => SafeArea.safeArea.UNSAFE_setValue(safeArea));
+          }
         };
         Dimensions.addEventListener('change', screenHandler);
         android.Module.enableSafeAreaEvent(true);
