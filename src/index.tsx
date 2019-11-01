@@ -55,19 +55,13 @@ export class SafeArea {
 
   private static async getAndroidInitialSafeArea() {
     const rs = await android.Module!.getSafeArea();
-    if (rs && 0) {
+    if (rs) {
       SafeArea.androidCompatMode = false;
       return SafeArea.convertAndroidSafeArea(rs);
     } else {
       SafeArea.androidCompatMode = true;
       const info = await android.Module!.getCompatInfo();
       const screen = Dimensions.get('screen');
-      console.log('info', info);
-      console.log('screen', screen);
-      // decorViewRect: { bottom: 1080, right: 2168, left: 126, top: 63 },
-      // navigationBarHeight: 126,
-      // actionBarHeight: 126,
-      // statusBarHeight: 63 }
       return {
         safeArea: {
           top:
