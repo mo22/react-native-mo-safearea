@@ -24,6 +24,9 @@ export declare class SafeArea {
      * the last info about animation duration
      */
     static systemAnimationDuration: number | undefined;
+    private static convertAndroidSafeArea;
+    private static getAndroidInitialSafeArea;
+    private static convertIosKeyboardArea;
     /**
      * stateful event that provides the current safe area insets
      */

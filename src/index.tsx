@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Insets, View, findNodeHandle, ViewProps, StyleSheet, Dimensions, LayoutChangeEvent, LayoutAnimation } from 'react-native';
+import { Insets, View, findNodeHandle, ViewProps, StyleSheet, Dimensions, LayoutChangeEvent, LayoutAnimation, ScaledSize } from 'react-native';
 import { StatefulEvent, Releaseable } from 'mo-core';
 import * as ios from './ios';
 import * as android from './android';
@@ -39,6 +39,73 @@ export class SafeArea {
    */
   public static systemAnimationDuration: number|undefined;
 
+  private static convertAndroidSafeArea(rs: android.SafeAreaEvent) {
+    return {
+      safeArea: rs.stableInsets,
+      system: {
+        top: rs.systemWindowInsets.top - rs.stableInsets.top,
+        left: rs.systemWindowInsets.left - rs.stableInsets.left,
+        right: rs.systemWindowInsets.right - rs.stableInsets.right,
+        bottom: rs.systemWindowInsets.bottom - rs.stableInsets.bottom,
+      },
+    };
+  }
+
+  private static async getAndroidInitialSafeArea() {
+    const rs = await android.Module!.getSafeArea();
+    if (rs && 0) {
+      return SafeArea.convertAndroidSafeArea(rs);
+    } else {
+      const info = await android.Module!.getCompatInfo();
+      const screen = Dimensions.get('screen');
+      return {
+        safeArea: {
+          top: (info.statusBarHeight || 0) / screen.scale,
+          left: 0,
+          right: 0,
+          bottom: (info.navigationBarHeight || 0) / screen.scale,
+        },
+        system: {
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        },
+      };
+    }
+  }
+
+  private static convertIosKeyboardArea(rs: ios.SafeAreaEvent['keyboardArea']) {
+    const insets = {
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    };
+    if (!rs) return insets;
+    const screen = Dimensions.get('screen');
+    if (rs.end.x === 0 && rs.end.width === screen.width) {
+      // full width
+    } else if (rs.end.x === 0) {
+      insets.left = rs.end.width;
+    } else if (rs.end.x + rs.end.width === screen.width) {
+      insets.right = rs.end.width;
+    } else {
+      console.log('ReactNativeMoSafeArea x center?', rs);
+    }
+    if (rs.end.y === 0 && rs.end.height === screen.height) {
+      // full height
+    } else if (rs.end.y <= 0) {
+      insets.top = Math.max(0, rs.end.y + rs.end.height);
+    } else if (rs.end.y + rs.end.height >= screen.height) {
+      insets.bottom = Math.max(0, screen.height - rs.end.y);
+    } else {
+      // can happen?
+      console.log('ReactNativeMoSafeArea y center?', rs);
+    }
+    return insets;
+  }
+
   /**
    * stateful event that provides the current safe area insets
    */
@@ -51,37 +118,7 @@ export class SafeArea {
         };
       }
       if (android.Module) {
-        (async () => {
-          const rs = await android.Module!.getSafeArea();
-          if (rs && 0) {
-            SafeArea.safeArea.UNSAFE_setValue({
-              safeArea: rs.stableInsets,
-              system: {
-                top: rs.systemWindowInsets.top - rs.stableInsets.top,
-                left: rs.systemWindowInsets.left - rs.stableInsets.left,
-                right: rs.systemWindowInsets.right - rs.stableInsets.right,
-                bottom: rs.systemWindowInsets.bottom - rs.stableInsets.bottom,
-              },
-            });
-          } else {
-            const info = await android.Module!.getCompatInfo();
-            console.log('info', info);
-            SafeArea.safeArea.UNSAFE_setValue({
-              safeArea: {
-                top: info.statusBarHeight || 0,
-                left: 0,
-                right: 0,
-                bottom: info.navigationBarHeight || 0,
-              },
-              system: {
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-              },
-            });
-          }
-        })();
+        SafeArea.getAndroidInitialSafeArea().then((safeArea) => SafeArea.safeArea.UNSAFE_setValue(safeArea));
       }
       return {
         safeArea: { left: 0, top: 0, right: 0, bottom: 0 },
@@ -102,31 +139,7 @@ export class SafeArea {
             });
           }
           if (rs.keyboardArea !== undefined) {
-            const insets = {
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-            };
-            if (rs.keyboardArea.end.x === 0 && rs.keyboardArea.end.width === Dimensions.get('screen').width) {
-              // full width
-            } else if (rs.keyboardArea.end.x === 0) {
-              insets.left = rs.keyboardArea.end.width;
-            } else if (rs.keyboardArea.end.x + rs.keyboardArea.end.width === Dimensions.get('screen').width) {
-              insets.right = rs.keyboardArea.end.width;
-            } else {
-              console.log('ReactNativeMoSafeArea x center?', rs.keyboardArea);
-            }
-            if (rs.keyboardArea.end.y === 0 && rs.keyboardArea.end.height === Dimensions.get('screen').height) {
-              // full height
-            } else if (rs.keyboardArea.end.y <= 0) {
-              insets.top = Math.max(0, rs.keyboardArea.end.y + rs.keyboardArea.end.height);
-            } else if (rs.keyboardArea.end.y + rs.keyboardArea.end.height >= Dimensions.get('screen').height) {
-              insets.bottom = Math.max(0, Dimensions.get('screen').height - rs.keyboardArea.end.y);
-            } else {
-              // can happen?
-              console.log('ReactNativeMoSafeArea y center?', rs.keyboardArea);
-            }
+            const insets = SafeArea.convertIosKeyboardArea(rs.keyboardArea);
             SafeArea.systemAnimationDuration = rs.keyboardArea.duration;
             partialEmit({
               system: {
@@ -144,32 +157,18 @@ export class SafeArea {
           ios.Module!.enableSafeAreaEvent(false);
         };
       } else if (android.Events && android.Module) {
-        android.Module.getSafeArea().then((rs) => {
-          if (!rs) return;
-          partialEmit({
-            safeArea: rs.stableInsets,
-            system: {
-              top: rs.systemWindowInsets.top - rs.stableInsets.top,
-              left: rs.systemWindowInsets.left - rs.stableInsets.left,
-              right: rs.systemWindowInsets.right - rs.stableInsets.right,
-              bottom: rs.systemWindowInsets.bottom - rs.stableInsets.bottom,
-            },
-          });
-        });
+        SafeArea.getAndroidInitialSafeArea().then((safeArea) => SafeArea.safeArea.UNSAFE_setValue(safeArea));
         const sub = android.Events.addListener('ReactNativeMoSafeArea', (rs) => {
-          partialEmit({
-            safeArea: rs.stableInsets,
-            system: {
-              top: rs.systemWindowInsets.top - rs.stableInsets.top,
-              left: rs.systemWindowInsets.left - rs.stableInsets.left,
-              right: rs.systemWindowInsets.right - rs.stableInsets.right,
-              bottom: rs.systemWindowInsets.bottom - rs.stableInsets.bottom,
-            },
-          });
+          partialEmit(SafeArea.convertAndroidSafeArea(rs));
         });
+        const screenHandler = (args: { window: ScaledSize; screen: ScaledSize }) => {
+          console.log('screenHandler', args);
+        };
+        Dimensions.addEventListener('change', screenHandler);
         android.Module.enableSafeAreaEvent(true);
         return () => {
           sub.remove();
+          Dimensions.removeEventListener('change', screenHandler);
           android.Module!.enableSafeAreaEvent(false);
         };
       } else {
