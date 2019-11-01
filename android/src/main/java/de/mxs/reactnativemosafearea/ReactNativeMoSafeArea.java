@@ -277,6 +277,7 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
                 res.putMap("decorViewRect", rs);
             }
         }
+        res.putBoolean("haveInsets", Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
         promise.resolve(res);
     }
 
