@@ -1,6 +1,8 @@
 package de.mxs.reactnativemosafearea;
 
 import android.app.Activity;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.Log;
@@ -233,6 +235,49 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
             res.putDouble("bottom", insets.bottom / density);
             promise.resolve(res);
         });
+    }
+
+    @SuppressWarnings({"unused"})
+    @ReactMethod
+    public void getCompatInfo(Promise promise) {
+        WritableMap res = Arguments.createMap();
+        Resources resources = getReactApplicationContext().getResources();
+        {
+            int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                res.putInt("statusBarHeight", resources.getDimensionPixelSize(resourceId));
+            }
+        }
+        {
+            final TypedArray styledAttributes = getReactApplicationContext().getTheme().obtainStyledAttributes(
+                    new int[] { android.R.attr.actionBarSize }
+            );
+            int actionBarHeight = (int)styledAttributes.getDimension(0, -1);
+            if (actionBarHeight != -1) {
+                res.putInt("actionBarHeight", actionBarHeight);
+            }
+            styledAttributes.recycle();
+        }
+        {
+            int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                res.putInt("navigationBarHeight", resources.getDimensionPixelSize(resourceId));
+            }
+        }
+        {
+            Rect decorViewRect = new Rect();
+            Activity activity = getReactApplicationContext().getCurrentActivity();
+            if (activity != null) {
+                activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(decorViewRect);
+                WritableMap rs = Arguments.createMap();
+                rs.putInt("top", decorViewRect.top);
+                rs.putInt("left", decorViewRect.left);
+                rs.putInt("right", decorViewRect.right);
+                rs.putInt("bottom", decorViewRect.bottom);
+                res.putMap("decorViewRect", rs);
+            }
+        }
+        promise.resolve(res);
     }
 
 }
