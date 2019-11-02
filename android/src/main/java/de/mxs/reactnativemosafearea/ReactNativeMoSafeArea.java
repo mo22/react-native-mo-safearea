@@ -110,7 +110,6 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
     @SuppressWarnings({"unused", "WeakerAccess"})
     @ReactMethod
     public void enableSafeAreaEvent(boolean enable) {
-        Log.i("ReactNativeMoSafeArea", "enableSafeAreaEvent " + enable);
         if (verbose) Log.i("ReactNativeMoSafeArea", "enableSafeAreaEvent " + enable);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!enable) {
