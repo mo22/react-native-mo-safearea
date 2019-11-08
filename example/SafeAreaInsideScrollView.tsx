@@ -79,7 +79,7 @@ export default class SafeAreaInsideScrollView extends React.Component<Navigation
               {this.props.safeArea.safeArea && keysOf(this.props.safeArea.safeArea).map((i) => (
                 <ListItem
                   key={i}
-                  title={'safeArea' + i}
+                  title={'safeArea.' + i}
                   rightTitle={this.props.safeArea.safeArea[i].toString()}
                 />
               ))}
