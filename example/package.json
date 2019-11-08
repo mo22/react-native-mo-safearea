@@ -12,10 +12,10 @@
     "@react-navigation/core": "^3.5.1",
     "@react-navigation/native": "^3.6.2",
     "react": "16.11.0",
-    "react-native": "^0.61.3",
+    "react-native": "^0.61.4",
     "react-native-elements": "^1.2.7",
     "react-native-gesture-handler": "^1.5.0",
-    "react-native-mo-safearea": "^0.2.10",
+    "react-native-mo-safearea": "^0.2.11",
     "react-native-safe-area-view": "^1.0.0",
     "react-native-screens": "^2.0.0-alpha.6",
     "react-native-vector-icons": "^6.6.0",
@@ -23,11 +23,11 @@
     "react-navigation-stack": "^1.10.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.4",
-    "@babel/plugin-proposal-decorators": "^7.6.0",
-    "@babel/runtime": "^7.6.3",
+    "@babel/core": "^7.7.2",
+    "@babel/plugin-proposal-decorators": "^7.7.0",
+    "@babel/runtime": "^7.7.2",
     "@react-native-community/eslint-config": "^0.0.5",
-    "@types/jest": "^24.0.21",
+    "@types/jest": "^24.0.22",
     "@types/react": "^16.9.11",
     "@types/react-native": "^0.60.22",
     "@types/react-test-renderer": "^16.9.1",
@@ -37,7 +37,7 @@
     "jetifier": "^1.6.4",
     "metro-react-native-babel-preset": "^0.57.0",
     "react-test-renderer": "16.11.0",
-    "typescript": "^3.6.4"
+    "typescript": "^3.7.2"
   },
   "jest": {
     "preset": "react-native"
