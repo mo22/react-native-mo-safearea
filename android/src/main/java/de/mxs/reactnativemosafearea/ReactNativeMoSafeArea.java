@@ -86,18 +86,22 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void startWatchingWindowInsets(final Activity activity) {
-        if (windowInsetView != null) {
-            windowInsetView.setOnApplyWindowInsetsListener(null);
-            windowInsetView = null;
-        }
-        windowInsetView = activity.findViewById(android.R.id.content);
-        windowInsetView.setOnApplyWindowInsetsListener((v, insets) -> {
-            if (verbose) Log.i("ReactNativeMoSafeArea", "insets changed " + insets);
-            final WindowInsets insets2 = activity.getWindow().getDecorView().getRootWindowInsets();
-            if (verbose) Log.i("ReactNativeMoSafeArea", "insets2 " + insets2);
-            WritableMap args = convertInsetsToArgs(insets);
-            getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("ReactNativeMoSafeArea", args);
-            return v.onApplyWindowInsets(insets);
+        activity.runOnUiThread(() -> {
+            if (windowInsetView != null) {
+                windowInsetView.setOnApplyWindowInsetsListener(null);
+                windowInsetView = null;
+            }
+//            windowInsetView = activity.findViewById(android.R.id.content);
+            windowInsetView = activity.getWindow().getDecorView();
+            windowInsetView.setOnApplyWindowInsetsListener((v, insets) -> {
+                if (verbose) Log.i("ReactNativeMoSafeArea", "insets changed " + insets);
+                final WindowInsets insets2 = activity.getWindow().getDecorView().getRootWindowInsets();
+                if (verbose) Log.i("ReactNativeMoSafeArea", "insets2 " + insets2);
+                WritableMap args = convertInsetsToArgs(insets);
+                getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("ReactNativeMoSafeArea", args);
+                return v.onApplyWindowInsets(insets);
+            });
+            windowInsetView.requestApplyInsets();
         });
     }
 
@@ -130,11 +134,9 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
                             if (activity == null) return;
                             startWatchingWindowInsets(activity);
                         }
-
                         @Override
                         public void onHostPause() {
                         }
-
                         @Override
                         public void onHostDestroy() {
                         }
