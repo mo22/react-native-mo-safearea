@@ -2,8 +2,8 @@ import { EmitterSubscription, Insets } from 'react-native';
 export interface Module {
     setVerbose(verbose: boolean): void;
     enableSafeAreaEvent(enable: boolean): void;
-    getSafeArea(): Promise<undefined | SafeAreaEvent>;
-    measureViewInsets(node: number): Promise<undefined | Required<Insets>>;
+    getSafeArea(): Promise<null | SafeAreaEvent>;
+    measureViewInsets(node: number): Promise<null | Required<Insets>>;
     getCompatInfo(): Promise<{
         statusBarHeight?: number;
         actionBarHeight?: number;

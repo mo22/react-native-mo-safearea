@@ -230,9 +230,9 @@ export class SafeArea {
     const node = findNodeHandle(view);
     if (!node) return undefined;
     if (ios.Module) {
-      return ios.Module.measureViewInsets(node);
+      return await ios.Module.measureViewInsets(node);
     } else if (android.Module) {
-      return android.Module.measureViewInsets(node);
+      return await android.Module.measureViewInsets(node) || undefined;
     }
     return undefined;
   }
