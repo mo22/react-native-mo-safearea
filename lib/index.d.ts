@@ -103,6 +103,9 @@ export declare class SafeAreaView extends React.PureComponent<SafeAreaViewProps,
     state: SafeAreaViewState;
     private ref;
     private lastSystemArea;
+    private mounted;
+    componentDidMount(): void;
+    componentWillUnmount(): void;
     render(): JSX.Element;
 }
 export {};

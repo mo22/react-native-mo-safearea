@@ -405,6 +405,15 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
 
   private ref = React.createRef<View>();
   private lastSystemArea: Required<Insets>|undefined;
+  private mounted = false;
+
+  public componentDidMount() {
+    this.mounted = true;
+  }
+
+  public componentWillUnmount() {
+    this.mounted = false;
+  }
 
   public render() {
     const { minPadding, padding, forceInsets, includeSystemWindows, animateSystemWindows, ...props } = this.props;
@@ -483,7 +492,9 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
                     r.left = r.left % screen.width;
                     r.top = r.top % screen.height;
                     r.bottom = r.bottom % screen.height;
-                    this.setState({ insets: r });
+                    if (this.mounted) {
+                      this.setState({ insets: r });
+                    }
                   });
                 }
               }}
