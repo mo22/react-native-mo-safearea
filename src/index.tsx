@@ -433,6 +433,7 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
           // console.log('SafeArea screen', screen);
           // console.log('SafeArea bMinPadding', bMinPadding);
           // console.log('SafeArea bPadding', bPadding);
+          // console.log('SafeArea state.insets', this.state.insets);
           const safeArea = { ...safeAreaInfo.safeArea };
 
           if (includeSystemWindows !== false) {
@@ -479,23 +480,35 @@ export class SafeAreaView extends React.PureComponent<SafeAreaViewProps, SafeAre
           };
           // console.log('SafeArea padding', padding);
 
+          const remeasureLayout = () => {
+            if (needAuto && this.ref.current) {
+              SafeArea.measureViewInsets(this.ref.current).then((r) => {
+                if (!r) return;
+                r.right = r.right % screen.width;
+                r.left = r.left % screen.width;
+                r.top = r.top % screen.height;
+                r.bottom = r.bottom % screen.height;
+                if (JSON.stringify(this.state.insets) === JSON.stringify(r)) return;
+                // console.log('SafeArea new insets', r);
+                if (this.mounted) {
+                  this.setState({ insets: r });
+                }
+              });
+            }
+          };
+
           return (
             <View
               pointerEvents="box-none"
               ref={this.ref}
               onLayout={(e: LayoutChangeEvent) => {
                 if (onLayout) onLayout(e);
-                if (needAuto && this.ref.current) {
-                  SafeArea.measureViewInsets(this.ref.current).then((r) => {
-                    if (!r) return;
-                    r.right = r.right % screen.width;
-                    r.left = r.left % screen.width;
-                    r.top = r.top % screen.height;
-                    r.bottom = r.bottom % screen.height;
-                    if (this.mounted) {
-                      this.setState({ insets: r });
-                    }
-                  });
+                remeasureLayout();
+                if (SafeArea.android.Module) {
+                  // @TODO why is the delay required? remove?
+                  setTimeout(() => {
+                    remeasureLayout();
+                  }, 100);
                 }
               }}
               {...otherProps}
