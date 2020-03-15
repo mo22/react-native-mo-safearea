@@ -21,7 +21,8 @@ const AppNavigator = createStackNavigator({
     screen: require('./SafeAreaInsideScrollView').default,
     navigationOptions: {
       title: 'SafeAreaInsideScrollView',
-      header: null,
+      header: undefined,
+      headerShown: false,
     },
   },
   Test: {
