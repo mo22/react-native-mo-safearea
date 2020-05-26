@@ -135,7 +135,6 @@ export class SafeArea {
    */
   public static readonly safeArea = new StatefulEvent<Readonly<SafeAreaInfo>>(
     (() => {
-      console.log('XXX init');
       if (ios.Module && ios.Module.initialSafeArea) {
         return {
           safeArea: ios.Module.initialSafeArea,
@@ -157,6 +156,7 @@ export class SafeArea {
         emit(newValue);
       };
       if (ios.Events && ios.Module) {
+        ios.Module.getSafeArea().then((rs) => partialEmit({ safeArea: rs }));
         const sub = ios.Events.addListener('ReactNativeMoSafeArea', (rs) => {
           if (rs.safeArea !== undefined) {
             partialEmit({
@@ -176,21 +176,20 @@ export class SafeArea {
             });
           }
         });
-        console.log('XXX enable');
         ios.Module.enableSafeAreaEvent(true);
         return () => {
-          console.log('XXX disable');
           sub.remove();
           ios.Module!.enableSafeAreaEvent(false);
         };
       } else if (android.Events && android.Module) {
-        SafeArea.getAndroidInitialSafeArea().then((safeArea) => SafeArea.safeArea.UNSAFE_setValue(safeArea));
+        // SafeArea.getAndroidInitialSafeArea().then((safeArea) => emit(safeArea));
+        android.Module.getSafeArea().then((rs) => rs && emit(SafeArea.convertAndroidSafeArea(rs)));
         const sub = android.Events.addListener('ReactNativeMoSafeArea', (rs) => {
           partialEmit(SafeArea.convertAndroidSafeArea(rs));
         });
         const screenHandler = () => {
           if (SafeArea.androidCompatMode) {
-            SafeArea.getAndroidInitialSafeArea().then((safeArea) => SafeArea.safeArea.UNSAFE_setValue(safeArea));
+            SafeArea.getAndroidInitialSafeArea().then((safeArea) => emit(safeArea));
           }
         };
         Dimensions.addEventListener('change', screenHandler);
