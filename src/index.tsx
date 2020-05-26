@@ -135,6 +135,7 @@ export class SafeArea {
    */
   public static readonly safeArea = new StatefulEvent<Readonly<SafeAreaInfo>>(
     (() => {
+      console.log('XXX init');
       if (ios.Module && ios.Module.initialSafeArea) {
         return {
           safeArea: ios.Module.initialSafeArea,
@@ -175,8 +176,10 @@ export class SafeArea {
             });
           }
         });
+        console.log('XXX enable');
         ios.Module.enableSafeAreaEvent(true);
         return () => {
+          console.log('XXX disable');
           sub.remove();
           ios.Module!.enableSafeAreaEvent(false);
         };

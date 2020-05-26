@@ -3,7 +3,7 @@
 #import <React/RCTUIManager.h>
 
 @interface ReactNativeMoSafeArea : RCTEventEmitter {
-    UIView* _referenceView;
+    BOOL _active;
     BOOL _verbose;
 }
 @end
@@ -58,7 +58,7 @@ RCT_EXPORT_METHOD(getSafeArea:(RCTPromiseResolveBlock)resolve reject:(RCTPromise
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"safeAreaInsets"]) {
+    if ([keyPath isEqualToString:@"sharedApplication.keyWindow.rootViewController.view.safeAreaInsets"]) {
         if (@available(iOS 11.0, *)) {
             UIEdgeInsets insets = UIApplication.sharedApplication.keyWindow.safeAreaInsets;
             if (_verbose) NSLog(@"ReactNativeMoSafeArea.observeValueForKeyPath new insets %@", NSStringFromUIEdgeInsets(insets));
@@ -78,20 +78,19 @@ RCT_EXPORT_METHOD(getSafeArea:(RCTPromiseResolveBlock)resolve reject:(RCTPromise
 
 RCT_EXPORT_METHOD(enableSafeAreaEvent:(BOOL)enable) {
     if (enable) {
-        if (_referenceView) {
-            [self->_referenceView removeObserver:self forKeyPath:@"safeAreaInsets"];
+        if (!_active) {
+            if (_verbose) NSLog(@"ReactNativeMoSafeArea.enableSafeAreaEvent enable");
+            [UIApplication addObserver:self forKeyPath:@"sharedApplication.keyWindow.rootViewController.view.safeAreaInsets" options:NSKeyValueObservingOptionNew context:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardNotification:) name:UIKeyboardWillChangeFrameNotification object:nil];
+            _active = YES;
         }
-        self->_referenceView = RCTSharedApplication().keyWindow.rootViewController.view;
-        if (_verbose) NSLog(@"ReactNativeMoSafeArea.enableSafeAreaEvent enable view %@", self->_referenceView);
-        [self->_referenceView addObserver:self forKeyPath:@"safeAreaInsets" options:NSKeyValueObservingOptionNew context:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardNotification:) name:UIKeyboardWillChangeFrameNotification object:nil];
     } else {
-        if (_referenceView) {
+        if (_active) {
             if (_verbose) NSLog(@"ReactNativeMoSafeArea.enableSafeAreaEvent disable");
-            [self->_referenceView removeObserver:self forKeyPath:@"safeAreaInsets"];
-            self->_referenceView = nil;
+            [UIApplication removeObserver:self forKeyPath:@"sharedApplication.keyWindow.rootViewController.view.safeAreaInsets"];
+            [[NSNotificationCenter defaultCenter] removeObserver:self];
+            _active = NO;
         }
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
 }
 
