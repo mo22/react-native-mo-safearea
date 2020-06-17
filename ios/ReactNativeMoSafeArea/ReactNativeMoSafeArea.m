@@ -87,7 +87,11 @@ RCT_EXPORT_METHOD(enableSafeAreaEvent:(BOOL)enable) {
     } else {
         if (_active) {
             if (_verbose) NSLog(@"ReactNativeMoSafeArea.enableSafeAreaEvent disable");
-            [UIApplication removeObserver:self forKeyPath:@"sharedApplication.keyWindow.rootViewController.view.safeAreaInsets"];
+            [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:UIDeviceProximityStateDidChangeNotification];
+            @try {
+                [UIApplication removeObserver:self forKeyPath:@"sharedApplication.keyWindow.rootViewController.view.safeAreaInsets"];
+            } @catch (NSException *exception) {
+            }
             [[NSNotificationCenter defaultCenter] removeObserver:self];
             _active = NO;
         }
