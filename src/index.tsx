@@ -5,12 +5,10 @@ import * as ios from './ios';
 import * as android from './android';
 
 
-
 export interface SafeAreaInfo {
   safeArea: Required<Insets>;
   system: Required<Insets>;
 }
-
 
 export class SafeArea {
   /**
@@ -247,27 +245,22 @@ export class SafeArea {
  * consume the current safe area insets. takes a function as child that gets passed
  * the current safe area insets.
  */
-export class SafeAreaConsumer extends React.PureComponent<{
-  children: (safeArea: SafeAreaInfo) => React.ReactElement
-}, SafeAreaConsumer['state']> {
-  public state = { value: SafeArea.safeArea.value };
-  private subscription?: Releaseable;
-
-  public componentDidMount() {
-    this.subscription = SafeArea.safeArea.subscribe((value) => {
-      this.setState({ value: value });
-    });
-  }
-
-  public componentWillUnmount() {
-    this.subscription!.release();
-  }
-
-  public render() {
-    return this.props.children(this.state.value);
-  }
+export interface SafeAreaConsumerProps {
+  children: (safeArea: SafeAreaInfo) => React.ReactElement;
 }
 
+export function SafeAreaConsumer(props: SafeAreaConsumerProps) {
+  const [value, setValue] = React.useState(SafeArea.safeArea.value);
+  React.useEffect(() => {
+    const subscription = SafeArea.safeArea.subscribe((value) => {
+      setValue(value);
+    });
+    return () => {
+      subscription.release();
+    };
+  }, []);
+  return props.children(value);
+}
 
 
 export interface SafeAreaInjectedProps {

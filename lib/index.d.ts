@@ -46,17 +46,10 @@ export declare class SafeArea {
  * consume the current safe area insets. takes a function as child that gets passed
  * the current safe area insets.
  */
-export declare class SafeAreaConsumer extends React.PureComponent<{
+export interface SafeAreaConsumerProps {
     children: (safeArea: SafeAreaInfo) => React.ReactElement;
-}, SafeAreaConsumer['state']> {
-    state: {
-        value: Readonly<SafeAreaInfo>;
-    };
-    private subscription?;
-    componentDidMount(): void;
-    componentWillUnmount(): void;
-    render(): React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)>;
 }
+export declare function SafeAreaConsumer(props: SafeAreaConsumerProps): React.ReactElement<any, string | ((props: any) => React.ReactElement<any, any> | null) | (new (props: any) => React.Component<any, any, any>)>;
 export interface SafeAreaInjectedProps {
     safeArea: SafeAreaInfo;
 }
