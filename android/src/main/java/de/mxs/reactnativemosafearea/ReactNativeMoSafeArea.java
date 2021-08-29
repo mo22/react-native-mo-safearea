@@ -282,4 +282,11 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
         promise.resolve(res);
     }
 
+    @SuppressWarnings("unused")
+    @ReactMethod
+    public void addListener(String eventName) {}
+
+    @SuppressWarnings("unused")
+    @ReactMethod
+    public void removeListeners(double count) {}
 }
