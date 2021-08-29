@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Insets, View, findNodeHandle, ViewProps, StyleSheet, Dimensions, LayoutChangeEvent, LayoutAnimation } from 'react-native';
+import { Insets, View, findNodeHandle, ViewProps, StyleSheet, Dimensions, LayoutChangeEvent, LayoutAnimation, NativeEventSubscription } from 'react-native';
 import { StatefulEvent, Releaseable } from 'mo-core';
 import * as ios from './ios';
 import * as android from './android';
@@ -190,11 +190,15 @@ export class SafeArea {
             SafeArea.getAndroidInitialSafeArea().then((safeArea) => emit(safeArea));
           }
         };
-        Dimensions.addEventListener('change', screenHandler);
+        const dimSub = Dimensions.addEventListener('change', screenHandler) as NativeEventSubscription|void;
         android.Module.enableSafeAreaEvent(true);
         return () => {
           sub.remove();
-          Dimensions.removeEventListener('change', screenHandler);
+          if (dimSub) {
+            dimSub.remove();
+          } else {
+            Dimensions.removeEventListener('change', screenHandler);
+          }
           android.Module!.enableSafeAreaEvent(false);
         };
       } else {
