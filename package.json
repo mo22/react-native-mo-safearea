@@ -1,6 +1,6 @@
 {
   "name": "react-native-mo-safearea",
-  "version": "0.2.21",
+  "version": "0.2.22",
   "description": "react native safe area view and tools",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -24,9 +24,9 @@
   },
   "homepage": "https://github.com/mo22/react-native-mo-safearea#readme",
   "devDependencies": {
-    "@types/react-native": "^0.64.13",
+    "@types/react-native": "^0.66.4",
     "react": "^17.0.2",
-    "react-native": "^0.65.1",
+    "react-native": "^0.66.3",
     "typescript": "^4.4.2"
   },
   "dependencies": {

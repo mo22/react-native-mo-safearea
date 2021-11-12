@@ -24,6 +24,8 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.uimanager.UIManagerModule;
 
+import java.util.Objects;
+
 import javax.annotation.Nonnull;
 
 public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
@@ -191,15 +193,10 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
     public static Rect getViewInsets(View view) {
         Rect insets = new Rect();
         View cur = view;
-//        Log.i("XXX", "trace:");
         while (cur != null) {
-//            Log.i("XXX", "  " + cur);
-//            Log.i("XXX", "    pos " + cur.getX() + " " + cur.getY() + " " + cur.getWidth() + " " + cur.getHeight());
             insets.left += cur.getX();
             insets.top += cur.getY();
             if (cur instanceof ScrollView) {
-                // @TODO: padding?
-                // @TODO: handle this in general somehow?
                 ScrollView scrollView = (ScrollView)cur;
                 if (scrollView.getChildCount() > 0) {
                     insets.bottom += scrollView.getChildAt(0).getHeight() - cur.getHeight();
@@ -220,7 +217,7 @@ public class ReactNativeMoSafeArea extends ReactContextBaseJavaModule {
     @SuppressWarnings({"unused"})
     @ReactMethod
     public void measureViewInsets(int node, Promise promise) {
-        UIManagerModule uiManager = this.getReactApplicationContext().getNativeModule(UIManagerModule.class);
+        UIManagerModule uiManager = Objects.requireNonNull(this.getReactApplicationContext().getNativeModule(UIManagerModule.class));
         uiManager.addUIBlock(nativeViewHierarchyManager -> {
             View view = nativeViewHierarchyManager.resolveView(node);
             if (view == null) {
